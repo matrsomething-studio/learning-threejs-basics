@@ -1,0 +1,22 @@
+body {
+  overflow: hidden;
+  --color-text: #fff;
+  --color-bg: rgb(53, 53, 53);
+  --color-link: #4b4b4b;
+  --color-link-hover: #fff;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  font-family: laca-text, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#scene {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+}
