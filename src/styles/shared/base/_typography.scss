@@ -1,0 +1,90 @@
+// Base - typography
+// https://www.cdnfonts.com/gotham.font
+// https://raw.githubusercontent.com/devinhunt/typebase.css/master/typebase.css
+
+//  Font Definitions
+@import url('https://fonts.cdnfonts.com/css/gotham?styles=17585,17591,17592');
+
+// Global
+html {
+    font-size: 140%;
+    font-family: 'Gotham Thin', sans-serif;
+    font-style: normal;
+}
+
+// Headings
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-size: 100%;
+    line-height: 1.55rem;
+    margin-top: 1.55rem;
+    margin-bottom: 0;
+}
+
+h1 {}
+
+h2 {}
+
+h3 {}
+
+h4 {}
+
+h5 {}
+
+h6 {}
+
+// Copy
+p {
+    line-height: 1.95rem;
+    margin-top: 1.55rem;
+    margin-bottom: 0;
+
+    strong {
+        font-family: 'Gotham', sans-serif;
+    }
+}
+
+// Lists
+ul,
+ol {
+    margin-top: 1.55rem;
+    margin-bottom: 1.55rem;
+}
+
+ul li,
+ol li {
+    line-height: 1.75em;
+}
+
+ul ul,
+ol ul,
+ul ol,
+ol ol {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+blockquote {
+    line-height: 1.55rem;
+    margin-top: 1.55rem;
+    margin-bottom: 1.55rem;
+}
+
+// Tables
+table {
+    margin-top: 1.5rem;
+    border-spacing: 0px;
+    border-collapse: collapse;
+}
+
+table td,
+table th {
+    padding: 0;
+    line-height: 33px;
+}
+
+// Type Specs

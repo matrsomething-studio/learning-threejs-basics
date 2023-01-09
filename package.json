@@ -8,7 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "clean": "rm -rf dist/*",
-		"commit-check": "git add . && git commit -m 'dev: checkpoint' && git push"
+    "commit-check": "git add . && git commit -m 'dev: checkpoint' && git push"
   },
   "devDependencies": {
     "sass": "^1.57.1",
@@ -16,6 +16,7 @@
     "vite-plugin-glsl": "^1.0.2"
   },
   "dependencies": {
+    "bootstrap": "^5.2.3",
     "dat.gui": "^0.7.9",
     "gsap": "^3.11.4",
     "three": "^0.148.0"
