@@ -1,0 +1,50 @@
+// Base - utils
+
+// Extend
+%theme-dark {
+    background-color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
+    
+    a {
+        padding-bottom: 6px;
+        color: rgba(255, 255, 255, .9);
+        text-decoration: none;
+        letter-spacing: .3em;
+        border-bottom: 1px solid rgba(255, 255, 255, .3);
+        transition: border 120ms ease-in-out;
+
+        &:hover {
+            border-bottom: 1px solid rgba(255, 255, 255, 0);
+         }
+    }
+}
+
+// Functions
+
+
+// Mixins
+@mixin picture-scale ($w, $h, $url) {
+    position: relative;
+    display: block;
+    min-height: $h;
+    background-image: url($url);
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-size: contain;
+}
+
+@mixin picture ($w, $h, $url) {
+    position: relative;
+    display: block;
+    width: $w;
+    height: $h;
+    background-image: url($url);
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-size: contain;
+    background-size: $w $h;
+    text-indent: -9999px;
+}
+
+
+// Keyframes

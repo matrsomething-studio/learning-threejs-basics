@@ -1,0 +1,26 @@
+// Base - common
+html {
+    scroll-behavior: smooth;
+    
+    &.has-touch {
+    }
+
+    &.no-js {
+    }
+    
+    body {
+        overflow-x: hidden;
+        @extend %theme-dark;
+
+        main {
+     
+            .section {
+                position: relative;
+            
+                .row {
+                    
+                }
+            }
+        }   
+    }
+}

@@ -26,6 +26,8 @@ export default class ThreeJSSketch {
         this.height = window.innerHeight;
         this.time = 0;
         this.speed = 0;
+        this.geometry = null;
+        this.plane = null;
         this.meshGroup = new THREE.Group();
         this.meshes = [];
         this.materials = [];
@@ -91,33 +93,17 @@ export default class ThreeJSSketch {
 
     setControls() {
         // Controls -  https://threejs.org/docs/?q=OrbitControls#examples/en/controls/OrbitControls
-        this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+        if (this.options.orbitControls) {
+            this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+        }
     }
 
     createObjects() {
-        this.images = [...document.querySelectorAll('.n img')];
-        this.images.forEach((img, index) => {
-            let mat = this.material.clone();
-            this.materials.push(mat);
-
-            mat.uniforms.texture1.value = new THREE.TextureLoader().load(img.attributes[0].value);
-            mat.uniforms.texture1.value.needsUpdate = true;
-
-            // 1.5 aspect ratio of image
-            let geo = new THREE.PlaneGeometry(1.5, 1, 20, 20);
-            let mesh = new THREE.Mesh(geo, mat);
-            
-            this.meshGroup.add(mesh);
-            this.meshes.push(mesh);    
-        });
-
-        this.scene.add(this.meshGroup);  
-        this.meshGroup.rotation.x = -.3;
-        this.meshGroup.rotation.y = -.3;
-        this.meshGroup.rotation.z = -.1;
-
-        this.tl.to(this.meshGroup.rotation, {duration: .5, x: 0, y: 0, z: 0, ease: Quad.easeInOut });
-        this.tl.pause();
+        console.log('Building 3JS Sketch Objects');
+        this.geometry = new THREE.PlaneGeometry(1, 1, 1, 1);
+        this.plane = new THREE.Mesh(this.geometry, this.material);
+        this.scene.add(this.plane);
+        this.meshes.push(this.plane);
     }
 
     createMaterial() {
@@ -149,8 +135,8 @@ export default class ThreeJSSketch {
             },
             // wireframe: true,
             transparent: true,
-            vertexShader: vertex,
-            fragmentShader: fragment
+            // vertexShader: vertex,
+            // fragmentShader: fragment
         });
     }
 

@@ -1,0 +1,31 @@
+// Base - grid
+// $grid-breakpoints: (
+// 	xs: 0,
+// 	sm: 320px,
+// 	md: 1025px,
+// 	lg: 1150px
+// );
+
+$container-max-widths: (
+    xs: 95%,
+    sm: 580px,
+    md: 735px,
+    lg: 1069px,
+    xl: 1441px
+);
+
+@import "~bootstrap/scss/bootstrap-grid.scss";
+
+* {
+    box-sizing: border-box;
+}
+
+.clearfix {
+    overflow: auto;
+}
+
+.clearfix::after {
+    display: table;
+    clear: both;
+    content: '';
+}

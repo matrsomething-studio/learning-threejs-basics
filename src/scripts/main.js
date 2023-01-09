@@ -4,29 +4,29 @@ import '../styles/main.scss';
 
 // Module(s)
 import NoJS from './modules/NoJS';
-import ScrollableTextGallery from './modules/ScrollableTextGallery';
+import THREEJS_SCENE_MODULE from './modules/THREEJS_SCENE_MODULE';
 
 
 // Main
 const APP = (() => {
     let NO_JS = null;
-    let SCROLLING_TEXT_GALLERY = null;
+    let THREEJS_SCENE_NAME = null;
     let RAFID = null;
 
     function raf() {
-        SCROLLING_TEXT_GALLERY.animate();
+        THREEJS_SCENE_NAME.animate();
         RAFID = requestAnimationFrame(raf);
     }
 
     function bindWindowEvents() {
         window.addEventListener('resize', (e) => {
-            SCROLLING_TEXT_GALLERY.resize();
+            THREEJS_SCENE_NAME.resize();
         });
     }
 
     function init() {
         NO_JS = new NoJS();
-        SCROLLING_TEXT_GALLERY = new ScrollableTextGallery({ sceneContainer: '#scene' });
+        THREEJS_SCENE_NAME = new THREEJS_SCENE_MODULE({ sceneContainer: '#scene', orbitControls: true });
         bindWindowEvents();
         requestAnimationFrame(raf);
     }
