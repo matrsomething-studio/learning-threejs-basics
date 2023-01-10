@@ -17,8 +17,8 @@ import { gsap, Quad } from 'gsap';
 // Controls -  https://threejs.org/docs/?q=OrbitControls#examples/en/controls/OrbitControls
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
-// Class - ThreeJSSketch
-export default class ThreeJSSketch {
+// Class - ThreeSketch
+export default class ThreeSketch {
     constructor(options) {
         this.options = options;
         this.width = window.innerWidth;
@@ -46,12 +46,12 @@ export default class ThreeJSSketch {
         // DAT GUI - https://github.com/dataarts/dat.gui
         this.GUI = new dat.GUI();
         this.meshes.forEach((mesh, indx) => {
-            let folder = this.GUI.addFolder(`Card 00${indx}`);
+            let folder = this.GUI.addFolder(`Object 00${indx}`);
             let rotationMax = Math.PI * 2;
-            folder.add(mesh.rotation, "x", 0, rotationMax, 0.01); 
-            folder.add(mesh.rotation, "y", 0, rotationMax, 0.01); 
-            folder.add(mesh.rotation, "z", 0, rotationMax, 0.01); 
-            folder.add(mesh, "visible", 0, 1, 0.01); 
+            folder.add(mesh.rotation, 'x', 0, rotationMax, 0.01); 
+            folder.add(mesh.rotation, 'y', 0, rotationMax, 0.01); 
+            folder.add(mesh.rotation, 'z', 0, rotationMax, 0.01); 
+            folder.add(mesh, 'visible', 0, 1, 0.01); 
         });
 
         this.GUI.close();
@@ -107,24 +107,24 @@ export default class ThreeJSSketch {
     createMaterial() {
         this.material = new THREE.ShaderMaterial({
             extensions: {
-                derivatives: "#extension GL_OES_standard_derivatives : enable"
+                derivatives: '#extension GL_OES_standard_derivatives : enable'
             },
             side: THREE.DoubleSide,
             uniforms: {
                 time: {
-                    type: "f",
+                    type: 'f',
                     value: 0
                 },
                 distanceFromCenter: {
-                    type: "f",
+                    type: 'f',
                     value: 0
                 },
                 texture1: {
-                    type: "t",
+                    type: 't',
                     value: null
                 },
                 resolution: {
-                    type: "v4",
+                    type: 'v4',
                     value: new THREE.Vector4()
                 },
                 uvRate1: {

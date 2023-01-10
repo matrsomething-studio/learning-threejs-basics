@@ -8,7 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "clean": "rm -rf dist/*",
-    "commit-check": "git add . && git commit -m 'dev: checkpoint' && git push"
+    "com-check": "git add . && git commit -m 'dev: checkpoint' && git push"
   },
   "devDependencies": {
     "sass": "^1.57.1",

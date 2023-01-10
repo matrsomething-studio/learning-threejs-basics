@@ -4,29 +4,29 @@ import '../styles/main.scss';
 
 // Module(s)
 import NoJSModule from './modules/NoJSModule';
-import ThreeJJSceneModule from './modules/ThreeJJSceneModule';
+import ThreeSceneModule from './modules/ThreeSceneModule';
 
 
-// Main
+// App
 const App = (() => {
     let NoJS = null;
-    let ThreeJSScene = null;
+    let ThreeScene = null;
     let rafID = null;
 
     function raf() {
-        ThreeJSScene.animate();
+        ThreeScene.animate();
         rafID = requestAnimationFrame(raf);
     }
 
     function bindWindowEvents() {
         window.addEventListener('resize', (e) => {
-            ThreeJSScene.resize();
+            ThreeScene.resize();
         });
     }
 
     function createObjects() {
         NoJS = new NoJSModule();
-        ThreeJSScene = new ThreeJJSceneModule({ sceneContainer: '#scene', orbitControls: true });
+        ThreeScene = new ThreeSceneModule({ sceneContainer: '#scene', orbitControls: true });
     }
 
     function init() {
