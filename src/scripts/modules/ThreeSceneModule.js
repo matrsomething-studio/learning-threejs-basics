@@ -6,7 +6,7 @@ import ThreeSketch from './ThreeSketchModule';
 export default class ThreeSceneModule {
     constructor(options) {
         this.options = options;
-        this.sketch = new ThreeSketch({ dom: document.querySelector(this.options.sceneContainer), orbitControls: this.options.orbitControls });
+        this.sketch = new ThreeSketch({ dom: document.querySelector(this.options.dom), orbitControls: this.options.orbitControls });
 
         this.bindEvents();
         this.animate();
@@ -17,7 +17,7 @@ export default class ThreeSceneModule {
     }
 
     bindEvents() {
-        console.log('Binding 3JS Scene Module Events');
+        console.log('Binding ThreeSceneModule Events');
     }
 
     resize() {

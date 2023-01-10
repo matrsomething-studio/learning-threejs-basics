@@ -9,7 +9,7 @@
 @import 'shared/base/debugger';
 
 // Shared - Component(s)
-@import 'shared/components/component-name';
+@import 'shared/components/modal';
 
 // Shared - Templates(s)
 @import 'shared/templates/template-name';
@@ -26,6 +26,6 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    z-index: -1;
+    z-index: 0;
     // pointer-events: none;
   }

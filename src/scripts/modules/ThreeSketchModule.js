@@ -17,8 +17,8 @@ import { gsap, Quad } from 'gsap';
 // Controls -  https://threejs.org/docs/?q=OrbitControls#examples/en/controls/OrbitControls
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
-// Class - ThreeSketch
-export default class ThreeSketch {
+// Class - ThreeSketchModule
+export default class ThreeSketchModule {
     constructor(options) {
         this.options = options;
         this.width = window.innerWidth;
@@ -46,15 +46,21 @@ export default class ThreeSketch {
         // DAT GUI - https://github.com/dataarts/dat.gui
         this.GUI = new dat.GUI();
         this.meshes.forEach((mesh, indx) => {
-            let folder = this.GUI.addFolder(`Object 00${indx}`);
-            let rotationMax = Math.PI * 2;
-            folder.add(mesh.rotation, 'x', 0, rotationMax, 0.01); 
-            folder.add(mesh.rotation, 'y', 0, rotationMax, 0.01); 
-            folder.add(mesh.rotation, 'z', 0, rotationMax, 0.01); 
-            folder.add(mesh, 'visible', 0, 1, 0.01); 
-        });
+            let folder = this.GUI.addFolder(`Object 00${++indx}`);
+            let cords = ['x', 'y', 'z'];
 
-        this.GUI.close();
+            cords.forEach(cord => {
+                folder.add(mesh.position, 'x', -1, 1, 0.01).name( `Translate ${cord}`  ); 
+            });
+
+            cords.forEach(cord => {
+                folder.add(mesh.rotation, cord, 0, Math.PI * 2, 0.01).name( `Rotate ${cord}`  ); 
+            });
+
+            folder.add(mesh, 'visible', 0, 1, 0.01); 
+
+            folder.open();
+        });
     }
 
     setScene() {
@@ -97,7 +103,6 @@ export default class ThreeSketch {
     }
 
     createObjects() {
-        console.log('Building 3JS Sketch Objects');
         this.geometry = new THREE.PlaneGeometry(1, 1, 1, 1);
         this.plane = new THREE.Mesh(this.geometry, this.material);
         this.scene.add(this.plane);

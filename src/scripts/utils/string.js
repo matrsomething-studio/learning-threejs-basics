@@ -1,4 +1,6 @@
 // return string capitalized
+const ALPHA = 'abcdefghijklmnopqrstuvwxyz';
+
 const capitalize = (str) => {
 	return str.charAt(0).toUpperCase() + str.slice(1);
 };
@@ -26,6 +28,7 @@ const stripLeadingTrailingEmptySpace = (str) => {
 };
 
 export {
+	ALPHA,
 	capitalize,
 	titleCase,
 	stripEmptySpace,

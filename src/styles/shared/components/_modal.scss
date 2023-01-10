@@ -1,0 +1,46 @@
+// Component - modal
+.modal {
+    z-index: 10000;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: none;
+    background: rgba(255, 255, 255, 1);
+
+    &.modal-full-viewport {
+        padding: 96px 0;
+    }
+
+    &.modal-open {
+        display: block;
+    }
+
+    .modal-close {
+        position: absolute;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        z-index: 9999;
+        overflow: hidden;
+        top: 24px;
+        left: 24px;
+        margin: 0;
+        padding: 0;
+        font-size: 40px;
+        line-height: 1;
+        cursor: pointer;
+        border: 0;
+        text-align: center;
+        background: none;
+
+        &:after {
+            content: 'x';
+        }
+    }
+
+    .modal-content {
+        position: relative;
+    }
+}

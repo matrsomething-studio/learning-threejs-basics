@@ -26,7 +26,7 @@ const App = (() => {
 
     function createObjects() {
         NoJS = new NoJSModule();
-        ThreeScene = new ThreeSceneModule({ sceneContainer: '#scene', orbitControls: true });
+        ThreeScene = new ThreeSceneModule({ dom: '#scene', orbitControls: true });
     }
 
     function init() {

@@ -1,44 +1,58 @@
 // Module(s)
 
-// Class - NoJS
-export default class NoJS {
-	constructor(options) {
-		this.HTML = document.querySelector('html');
+// Class - NoJSModule
+export default class NoJSModule {
+    constructor(options) {
+        this.options = options;
+        this.HTML = document.querySelector('html');
 
-		if (options && options.hasOwnProperty('enable') && options.enable === true) {
-			this.enable();
-			return;
-		}
+        if (this.options && this.options.hasOwnProperty('enable') && this.options.enable === true) {
+            this.enable();
+            return;
+        }
 
-		this.disable();
-	}
-	
-	isEnabled() {
-		return !this.HTML.classList.contains('no-js') ? true : false;
-	};
+        this.tests();
+    }
 
-	isTouchEnabled() { 
-		return !!(( 'ontouchstart' in window ) ||  
-			( window.DocumentTouch && document instanceof window.DocumentTouch) ||
-			( navigator.maxTouchPoints > 0 ) || 
-			( navigator.msMaxTouchPoints > 0 )); 
-	};
+    get isWebGLEnabled() {
+        let canvas = document.createElement('canvas');
 
-	enable() {
-		if (this.isEnabled()) {
-			this.HTML.classList.remove('js');
-			this.HTML.classList.add('no-js');
-		}
-	};
+        if (typeof canvas.getContext === 'function') {
+            return !!(canvas.getContext('webgl') || canvas.getContext('experimental-webgl'));
+        }
+    };
 
-	disable() {
-		if (!this.isEnabled()) {
-			this.HTML.classList.remove('no-js');
-			this.HTML.classList.add('js');
-		}
+    get isRetina() {
+        return ('devicePixelRatio' in window && window.devicePixelRatio >= 1.5);
+    };
+    
+    get isJSEnabled() {
+        return !this.HTML.classList.contains('no-js') ? true : false;
+    };
 
-		if (this.isTouchEnabled()) {
-			this.HTML.classList.add('has-touch');
-		}
-	};
+    get isTouchEnabled() { 
+        return !!(( 'ontouchstart' in window ) ||  
+            ( window.DocumentTouch && document instanceof window.DocumentTouch) ||
+            ( navigator.maxTouchPoints > 0 ) || 
+            ( navigator.msMaxTouchPoints > 0 )); 
+    };
+
+    tests() {
+        if (!this.isJSEnabled) {
+            this.HTML.classList.remove('no-js');
+            this.HTML.classList.add('js');
+        }
+
+        if (this.isTouchEnabled) {
+            this.HTML.classList.add('has-touch');
+        }
+
+        if (this.isRetina) {
+            this.HTML.classList.add('is-retina');
+        }
+
+        if (this.isWebGLEnabled) {
+            this.HTML.classList.add('has-webgl');
+        }
+    };
 }
