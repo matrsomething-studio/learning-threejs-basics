@@ -42,8 +42,12 @@ const App = (() => {
 
         window.addEventListener('keydown', function(e){
             if (e.key === 'Escape') {
-                SimpleModal.closeModal();
+                SimpleModal.close();
             }
+        });
+
+        window.addEventListener('mousemove', function(e){
+            ThreeScene.setMouse(e.clientX, e.clientY);
         });
     }
 

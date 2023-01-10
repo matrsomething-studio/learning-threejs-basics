@@ -12,15 +12,20 @@ export default class ThreeSceneModule {
         this.animate();
     }
 
+    setMouse(x, y){
+        this.sketch.mouse.x = x;
+        this.sketch.mouse.y = y;
+    }
+
     animate() {
         this.sketch.animate();
     }
 
-    bindEvents() {
-        console.log('Binding ThreeSceneModule Events');
-    }
-
     resize() {
         this.sketch.handleResize();
+    }
+
+    bindEvents() {
+        console.log('Binding ThreeSceneModule Events');
     }
 }

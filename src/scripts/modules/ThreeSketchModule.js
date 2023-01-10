@@ -30,6 +30,7 @@ export default class ThreeSketchModule {
         this.meshGroup = new THREE.Group();
         this.meshes = [];
         this.materials = {};
+        this.mouse = {x: 0, y: 0};
         // this.tl = gsap.timeline();
         
         this.setScene();
@@ -116,7 +117,8 @@ export default class ThreeSketchModule {
             side: THREE.DoubleSide,
             uniforms: {
                 iTime: { value: 0 },
-                iResolution:  { value: new THREE.Vector3() }
+                iResolution:  { value: new THREE.Vector3() },
+                iMouse: { value: this.mouse }
             },
             // wireframe: true,
             transparent: true,
