@@ -1,15 +1,3 @@
-// Usage
-/*
-<a data-modal="MODAL-ID" href="#" target="_blank">Learn More/a>
-
-<div class="modal modal-full-viewport" id="MODAL-ID" role="dialog" tabindex="-1">
-    <button class="modal-close" data-modal-close="" aria-label="Close"></button>
-    <div class="modal-content">
-    </div>
-</div>
-*/
-
-
 // Util(s)
 
 // Class - SimpleModal
@@ -18,21 +6,21 @@ export default class SimpleModal {
         this.HTML = document.querySelector('html');
         this.modalCTA = document.querySelector(`[${el}]`);
         this.modal = document.getElementById(this.modalCTA.dataset.modal);
-        this.modalCloseBtn = this._modal.querySelector('[data-modal-close]');
+        this.modalCloseBtn = this.modal.querySelector('[data-modal-close]');
         this.isModalOpen = false;
 
         this.bindEvents();
     }
 
     openModal() {
-        this.modal.classList.add('modal-open');
         this.HTML.style.overflow = 'hidden';
+        this.modal.classList.add('modal-open');
         this.isModalOpen = true;
     }
 
     closeModal() {
+        this.HTML.style.overflow = 'auto';
         this.modal.classList.remove('modal-open');
-        this.html.style.overflow = 'auto';
         this.isModalOpen = false;
     }
 

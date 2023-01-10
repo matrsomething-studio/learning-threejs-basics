@@ -1,12 +1,12 @@
 // https://threejs.org/
+// https://r105.threejsfundamentals.org/
 import * as THREE from 'three';
 
 // https://threejs.org/docs/#examples/en/loaders/GLTFLoader
 // import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 // Shaders
-import fragment from '../shaders/distort/fragment.glsl';
-import vertex from '../shaders/distort/vertex.glsl';
+import fragmentRGB from '../shaders/rgb/fragment.glsl';
 
 // DAT GUI - https://github.com/dataarts/dat.gui
 import * as dat from 'dat.gui';
@@ -29,9 +29,9 @@ export default class ThreeSketchModule {
         this.plane = null;
         this.meshGroup = new THREE.Group();
         this.meshes = [];
-        this.materials = [];
-        this.tl = gsap.timeline();
-
+        this.materials = {};
+        // this.tl = gsap.timeline();
+        
         this.setScene();
         this.setRenderer();
         this.setCamera();
@@ -50,7 +50,7 @@ export default class ThreeSketchModule {
             let cords = ['x', 'y', 'z'];
 
             cords.forEach(cord => {
-                folder.add(mesh.position, 'x', -1, 1, 0.01).name( `Translate ${cord}`  ); 
+                folder.add(mesh.position, cord, -1, 1, 0.01).name( `Translate ${cord}`  ); 
             });
 
             cords.forEach(cord => {
@@ -58,7 +58,6 @@ export default class ThreeSketchModule {
             });
 
             folder.add(mesh, 'visible', 0, 1, 0.01); 
-
             folder.open();
         });
     }
@@ -104,43 +103,28 @@ export default class ThreeSketchModule {
 
     createObjects() {
         this.geometry = new THREE.PlaneGeometry(1, 1, 1, 1);
-        this.plane = new THREE.Mesh(this.geometry, this.material);
+        this.plane = new THREE.Mesh(this.geometry, this.materials.rgb);
         this.scene.add(this.plane);
         this.meshes.push(this.plane);
     }
 
     createMaterial() {
-        this.material = new THREE.ShaderMaterial({
+        let material = new THREE.ShaderMaterial({
             extensions: {
                 derivatives: '#extension GL_OES_standard_derivatives : enable'
             },
             side: THREE.DoubleSide,
             uniforms: {
-                time: {
-                    type: 'f',
-                    value: 0
-                },
-                distanceFromCenter: {
-                    type: 'f',
-                    value: 0
-                },
-                texture1: {
-                    type: 't',
-                    value: null
-                },
-                resolution: {
-                    type: 'v4',
-                    value: new THREE.Vector4()
-                },
-                uvRate1: {
-                    value: new THREE.Vector2(1, 1)
-                }
+                iTime: { value: 0 },
+                iResolution:  { value: new THREE.Vector3() }
             },
             // wireframe: true,
             transparent: true,
             // vertexShader: vertex,
-            // fragmentShader: fragment
+            fragmentShader: fragmentRGB
         });
+
+        this.materials.rgb = material;
     }
 
     handleResize() {
@@ -160,11 +144,13 @@ export default class ThreeSketchModule {
             a2 = (this.height / this.width) / this.imageAspect;
         }
 
-        this.material.uniforms.resolution.value.x = this.width;
-        this.material.uniforms.resolution.value.y = this.height;
-        this.material.uniforms.resolution.value.z = a1;
-        this.material.uniforms.resolution.value.w = a2;
-
+        for (const [key, value] of Object.entries(this.materials)) {
+            value.uniforms.iResolution.value.x = this.width;
+            value.uniforms.iResolution.value.y = this.height;
+            value.uniforms.iResolution.value.z = a1;
+            value.uniforms.iResolution.value.w = a2;
+        }
+          
         this.camera.aspect = this.width / this.height;
         this.camera.updateProjectionMatrix();
     }
@@ -172,12 +158,9 @@ export default class ThreeSketchModule {
     animate() {
         this.time += 0.05;
 
-        if (this.materials) {
-            this.materials.forEach(m => {
-                m.uniforms.time.value = this.time;
-            });
-        } else {
-            this.material.uniforms.time.value = this.time;
+        for (const [key, value] of Object.entries(this.materials)) {
+            value.uniforms.iResolution.value.set(this.width, this.height, 1);
+            value.uniforms.iTime.value = this.time;
         }
 
         this.controls.update();

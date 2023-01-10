@@ -18,7 +18,20 @@
   </head>
   
   <body>
-    <div id="scene"></div>
+    <div id="scene">
+      <div style="position: absolute; width: 100%; text-align: center; bottom: 15%;">
+        <a data-modal="MODAL-ID" href="#" target="_blank">Learn More</a>
+      </div>
+    </div>
+
+    
+
+    <div id="MODAL-ID" class="modal modal-full-viewport" role="dialog" tabindex="-1">
+        <button class="modal-close" data-modal-close aria-label="Close"></button>
+        <div class="modal-content" style="text-align: center; padding-top: 25vh;">
+          <h2>Hello world, just a simple modal test.</h2>
+        </div>
+    </div>
     <script type="module" src="./scripts/main.js"></script>
   </body>
 </html>

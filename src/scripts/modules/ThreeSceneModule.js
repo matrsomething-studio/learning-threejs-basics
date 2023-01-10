@@ -1,6 +1,6 @@
 // Module(s)
-import { gsap, Quad } from 'gsap';
 import ThreeSketch from './ThreeSketchModule';
+import { gsap, Quad } from 'gsap';
 
 // Class - ThreeSceneModule
 export default class ThreeSceneModule {
