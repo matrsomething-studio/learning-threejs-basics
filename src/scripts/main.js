@@ -3,30 +3,34 @@ import '../styles/main.scss';
 
 
 // Module(s)
-import NoJS from './modules/NoJS';
-import THREEJS_SCENE_MODULE from './modules/THREEJS_SCENE_MODULE';
+import NoJSModule from './modules/NoJSModule';
+import ThreeJJSceneModule from './modules/ThreeJJSceneModule';
 
 
 // Main
-const APP = (() => {
-    let NO_JS = null;
-    let THREEJS_SCENE_NAME = null;
-    let RAFID = null;
+const App = (() => {
+    let NoJS = null;
+    let ThreeJSScene = null;
+    let rafID = null;
 
     function raf() {
-        THREEJS_SCENE_NAME.animate();
-        RAFID = requestAnimationFrame(raf);
+        ThreeJSScene.animate();
+        rafID = requestAnimationFrame(raf);
     }
 
     function bindWindowEvents() {
         window.addEventListener('resize', (e) => {
-            THREEJS_SCENE_NAME.resize();
+            ThreeJSScene.resize();
         });
     }
 
+    function createObjects() {
+        NoJS = new NoJSModule();
+        ThreeJSScene = new ThreeJJSceneModule({ sceneContainer: '#scene', orbitControls: true });
+    }
+
     function init() {
-        NO_JS = new NoJS();
-        THREEJS_SCENE_NAME = new THREEJS_SCENE_MODULE({ sceneContainer: '#scene', orbitControls: true });
+        createObjects();
         bindWindowEvents();
         requestAnimationFrame(raf);
     }
@@ -40,6 +44,6 @@ const APP = (() => {
 // Load App
 document.addEventListener('readystatechange', e => {
     if (e.target.readyState === 'complete') {
-        APP.init();
+        App.init();
     }
 });

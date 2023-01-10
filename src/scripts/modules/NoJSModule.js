@@ -3,7 +3,6 @@
 // Class - NoJS
 export default class NoJS {
 	constructor(options) {
-		// Prop(s)
 		this.HTML = document.querySelector('html');
 
 		if (options && options.hasOwnProperty('enable') && options.enable === true) {
@@ -14,7 +13,6 @@ export default class NoJS {
 		this.disable();
 	}
 	
-	// Methods
 	isEnabled() {
 		return !this.HTML.classList.contains('no-js') ? true : false;
 	};
@@ -43,4 +41,4 @@ export default class NoJS {
 			this.HTML.classList.add('has-touch');
 		}
 	};
-};
+}

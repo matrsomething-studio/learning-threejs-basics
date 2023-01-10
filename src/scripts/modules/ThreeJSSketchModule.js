@@ -20,7 +20,6 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 // Class - ThreeJSSketch
 export default class ThreeJSSketch {
     constructor(options) {
-        // Props
         this.options = options;
         this.width = window.innerWidth;
         this.height = window.innerHeight;
@@ -33,7 +32,6 @@ export default class ThreeJSSketch {
         this.materials = [];
         this.tl = gsap.timeline();
 
-        // Methods
         this.setScene();
         this.setRenderer();
         this.setCamera();
@@ -180,4 +178,4 @@ export default class ThreeJSSketch {
         this.controls.update();
         this.renderer.render(this.scene, this.camera);
     }
-};
+}

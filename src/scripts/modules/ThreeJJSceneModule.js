@@ -1,15 +1,13 @@
 // Module(s)
 import { gsap, Quad } from 'gsap';
-import ThreeJSSketch from './ThreeJSSketch';
+import ThreeJSSketch from './ThreeJSSketchModule';
 
 // Class - ScrollableTextGallery
-export default class THREEJS_SCENE_MODULE {
+export default class ThreeJSSceneModule {
     constructor(options) {
-        // Props
         this.options = options;
         this.sketch = new ThreeJSSketch({ dom: document.querySelector(this.options.sceneContainer), orbitControls: this.options.orbitControls });
 
-        // Methods
         this.bindEvents();
         this.animate();
     }
@@ -25,4 +23,4 @@ export default class THREEJS_SCENE_MODULE {
     resize() {
         this.sketch.handleResize();
     }
-};
+}
