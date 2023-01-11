@@ -47,18 +47,22 @@ const App = (() => {
         });
 
         window.addEventListener('mousemove', function(e){
-            ThreeScene.setMouse(e.clientX, e.clientY);
+            ThreeScene.setMouse(e);
+        });
+
+        window.addEventListener('wheel', function(e){
+            ThreeScene.setWheel(e);
         });
     }
 
-    function createObjects() {
+    function create() {
         NoJS = new NoJSModule();
         ThreeScene = new ThreeSceneModule({ dom: '#scene', orbitControls: true });
         SimpleModal = new SimpleModalComponent('data-modal="MODAL-ID"');
     }
 
     function init() {
-        createObjects();
+        create();
         bindWindowEvents();
         play();
     }

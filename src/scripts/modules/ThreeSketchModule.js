@@ -11,9 +11,6 @@ import fragmentRGB from '../shaders/rgb/fragment.glsl';
 // DAT GUI - https://github.com/dataarts/dat.gui
 import * as dat from 'dat.gui';
 
-// GSAP - https://greensock.com/docs/v3/GSAP/Timeline
-import { gsap, Quad } from 'gsap';
-
 // Controls -  https://threejs.org/docs/?q=OrbitControls#examples/en/controls/OrbitControls
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
@@ -21,17 +18,16 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 export default class ThreeSketchModule {
     constructor(options) {
         this.options = options;
+        this.container = this.options.dom;
         this.width = window.innerWidth;
         this.height = window.innerHeight;
         this.time = 0;
-        this.speed = 0;
         this.geometry = null;
         this.plane = null;
         this.meshGroup = new THREE.Group();
         this.meshes = [];
         this.materials = {};
         this.mouse = {x: 0, y: 0};
-        // this.tl = gsap.timeline();
         
         this.setScene();
         this.setRenderer();
@@ -40,7 +36,11 @@ export default class ThreeSketchModule {
         this.createMaterial();
         this.createObjects();
         this.createGUI();
-        this.handleResize();
+        this.resize();
+    }
+
+    getTime() {
+        return this.time;
     }
 
     createGUI() {
@@ -58,8 +58,15 @@ export default class ThreeSketchModule {
                 folder.add(mesh.rotation, cord, 0, Math.PI * 2, 0.01).name( `Rotate ${cord}`  ); 
             });
 
+            cords.forEach(cord => {
+                folder.add(mesh.scale, cord, 0, 1, 0.01).name( `Scale ${cord}`  ); 
+            });
+
             folder.add(mesh, 'visible', 0, 1, 0.01); 
-            folder.open();
+
+            if (indx == 1) {
+                folder.open();
+            }
         });
     }
 
@@ -70,16 +77,12 @@ export default class ThreeSketchModule {
 
     setRenderer() {
         // Renderer - https://threejs.org/docs/#api/en/renderers/WebGLRenderer
-        this.renderer = new THREE.WebGLRenderer({
-            antialias: true,
-            alpha: true
-        });
+        this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         this.renderer.setPixelRatio(window.devicePixelRatio);
         this.renderer.setSize(this.width, this.height);
         this.renderer.sortObjects = false;
         this.renderer.outputEncoding = THREE.sRGBEncoding;
 
-        this.container = this.options.dom;
         this.container.appendChild(this.renderer.domElement);
     }
 
@@ -91,6 +94,7 @@ export default class ThreeSketchModule {
             0.001,
             1000
         );
+        this.camera.updateProjectionMatrix();
         this.camera.position.set(0, 0, 2);
         this.camera.lookAt(0, 0, 0);
     }
@@ -105,8 +109,15 @@ export default class ThreeSketchModule {
     createObjects() {
         this.geometry = new THREE.PlaneGeometry(1, 1, 1, 1);
         this.plane = new THREE.Mesh(this.geometry, this.materials.rgb);
+
+        let instance = new THREE.InstancedMesh(this.geometry, this.materials.rgb, 1);
+        instance.position.y += -1.05;
+
         this.scene.add(this.plane);
         this.meshes.push(this.plane);
+
+        this.scene.add(instance);
+        this.meshes.push(instance);
     }
 
     createMaterial() {
@@ -121,15 +132,15 @@ export default class ThreeSketchModule {
                 iMouse: { value: this.mouse }
             },
             // wireframe: true,
-            transparent: true,
             // vertexShader: vertex,
+            transparent: true,
             fragmentShader: fragmentRGB
         });
 
         this.materials.rgb = material;
     }
 
-    handleResize() {
+    resize() {
         this.width = window.innerWidth;
         this.height = window.innerHeight;
         this.renderer.setSize(this.width, this.height);
@@ -158,14 +169,17 @@ export default class ThreeSketchModule {
     }
 
     animate() {
-        this.time += 0.05;
+        this.time = performance.now() * .0025;
 
         for (const [key, value] of Object.entries(this.materials)) {
             value.uniforms.iResolution.value.set(this.width, this.height, 1);
             value.uniforms.iTime.value = this.time;
         }
 
-        this.controls.update();
+        if (this.controls) {
+            this.controls.update();
+        }
+
         this.renderer.render(this.scene, this.camera);
     }
 }
