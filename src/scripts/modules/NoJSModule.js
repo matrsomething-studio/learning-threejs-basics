@@ -4,7 +4,7 @@
 export default class NoJSModule {
     constructor(options) {
         this.options = options;
-        this.HTML = document.querySelector('html');
+        this.html = document.querySelector('html');
 
         if (this.options && this.options.hasOwnProperty('enable') && this.options.enable === true) {
             this.enable();
@@ -27,7 +27,7 @@ export default class NoJSModule {
     };
     
     get isJSEnabled() {
-        return !this.HTML.classList.contains('no-js') ? true : false;
+        return !this.html.classList.contains('no-js') ? true : false;
     };
 
     get isTouchEnabled() { 
@@ -39,20 +39,20 @@ export default class NoJSModule {
 
     tests() {
         if (!this.isJSEnabled) {
-            this.HTML.classList.remove('no-js');
-            this.HTML.classList.add('js');
+            this.html.classList.remove('no-js');
+            this.html.classList.add('js');
         }
 
         if (this.isTouchEnabled) {
-            this.HTML.classList.add('has-touch');
+            this.html.classList.add('has-touch');
         }
 
         if (this.isRetina) {
-            this.HTML.classList.add('is-retina');
+            this.html.classList.add('is-retina');
         }
 
         if (this.isWebGLEnabled) {
-            this.HTML.classList.add('has-webgl');
+            this.html.classList.add('has-webgl');
         }
     };
 }

@@ -2,9 +2,10 @@
 
 // Class - SimpleModal
 export default class SimpleModal {
-    constructor(selector) {
+    constructor(options) {
         this.html = document.querySelector('html');
-        this.openBtn = document.querySelector(`[${selector}]`);
+        this.options = options;
+        this.openBtn = document.querySelector(`[${this.options.domSelector}]`);
         this.modal = document.getElementById(this.openBtn.dataset.modal);
         this.closeBtn = this.modal.querySelector('[data-modal-close]');
         this.isOpen = false;
@@ -12,16 +13,22 @@ export default class SimpleModal {
         this.bindEvents();
     }
 
-    open() {
-        this.html.style.overflow = 'hidden';
+    open() {        
         this.modal.classList.add('modal-open');
         this.isOpen = true;
+
+        if (this.options.overflowHide) {
+            this.html.style.overflow = 'hidden';
+        }
     }
 
     close() {
-        this.html.style.overflow = 'auto';
         this.modal.classList.remove('modal-open');
         this.isOpen = false;
+
+        if (this.options.overflowHide) {
+            this.html.style.overflow = 'auto';
+        }
     }
 
     bindEvents() {

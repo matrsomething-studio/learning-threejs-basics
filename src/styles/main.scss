@@ -15,17 +15,22 @@
 @import 'shared/templates/template-name';
 
 // Overview - Partial(s)
-@import 'overview/partial-name';
+@import 'overview/scene';
 
 // Sample Page - Partial(s)
 @import 'sample-page/partial-name';
 
-#scene {
-    position: fixed;
-    top: 0;
-    left: 0;
+
+#header,
+#footer {
+    position: absolute;
     width: 100vw;
-    height: 100vh;
-    z-index: 0;
-    // pointer-events: none;
-  }
+}
+
+#header {
+ top: 0
+}
+
+#footer {
+    bottom: 0
+   }
