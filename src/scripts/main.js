@@ -2,68 +2,68 @@
 import '../styles/main.scss';
 
 // Components(s)
-import SimpleModalComponent from './components/SimpleModal';
-
-// Module(s)
-import NoJSModule from './modules/NoJSModule';
-import ThreeSceneModule from './modules/ThreeSceneModule';
+import SimpleModal from './components/SimpleModal';
+import KnowJS from './components/KnowJS';
+import ThreeExperience from './components/ThreeExperience';
 
 // App
 const App = (() => {
-    let NoJS = null;
-    let SimpleModal = null;
-    let ThreeScene = null;
-    let isPlaying = false;
-    let requestID = null;
+    let JSKnow = null;
+    let DemoModal = null;
+    let DemoExp = null;
+    let playing = false;
+    let rafID = null;
 
-    function raf() {
-        ThreeScene.animate();
-        requestID = requestAnimationFrame(raf);
+    function update() {
+        DemoExp.update();
+        rafID = requestAnimationFrame(update);
     }
 
     function play() {
-        if (!isPlaying) {
-            raf();
-            isPlaying = true;
+        if (!playing) {
+            update();
+            playing = true;
         }
     }
 
     function stop() {
-        if (isPlaying) {
-            cancelAnimationFrame(requestID);
-            isPlaying = false;
+        if (playing) {
+            cancelAnimationFrame(rafID);
+            playing = false;
         }
     }
 
-    function bindWindowEvents() {
+    function bind() {
         window.addEventListener('resize', (e) => {
-            ThreeScene.resize();
+            DemoExp.resize();
         });
 
-        window.addEventListener('keydown', function(e){
+        window.addEventListener('keydown', (e) =>{
             if (e.key === 'Escape') {
-                SimpleModal.close();
+                DemoModal.close();
             }
         });
 
-        window.addEventListener('mousemove', function(e){
-            ThreeScene.setMouse(e);
+        window.addEventListener('mousemove', (e) =>{
+            DemoExp.mouse = e;
+            DemoExp.cursor.x = e.clientX / DemoExp.width - 0.5;
+            DemoExp.cursor.y = e.clientY / DemoExp.height - 0.5;
         });
 
-        window.addEventListener('wheel', function(e){
-            ThreeScene.setWheel(e);
+        window.addEventListener('wheel', (e) =>{
+            DemoExp.wheel = e;
         });
     }
 
     function create() {
-        NoJS = new NoJSModule();
-        ThreeScene = new ThreeSceneModule({ domSelector: '#scene', orbitControls: true, showGUI: true });
-        SimpleModal = new SimpleModalComponent({ domSelector: 'data-modal="MODAL-ID"', overflowHide: false });
+        JSKnow = new KnowJS();
+        DemoModal = new SimpleModal({ domSelector: 'data-modal="MODAL-ID"', overflowHide: false });
+        DemoExp = new ThreeExperience({ domSelector: '#scene', orbitControls: true, showGUI: true });
     }
 
     function init() {
         create();
-        bindWindowEvents();
+        bind();
         play();
     }
     

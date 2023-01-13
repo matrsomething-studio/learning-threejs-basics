@@ -1,16 +1,14 @@
-// Util(s)
-
 // Class - SimpleModal
 export default class SimpleModal {
     constructor(options) {
-        this.html = document.querySelector('html');
         this.options = options;
+        this.html = document.querySelector('html');
         this.openBtn = document.querySelector(`[${this.options.domSelector}]`);
         this.modal = document.getElementById(this.openBtn.dataset.modal);
         this.closeBtn = this.modal.querySelector('[data-modal-close]');
         this.isOpen = false;
 
-        this.bindEvents();
+        this.bind();
     }
 
     open() {        
@@ -31,7 +29,7 @@ export default class SimpleModal {
         }
     }
 
-    bindEvents() {
+    bind() {
         this.openBtn.addEventListener('click', (e) => {
             e.preventDefault();
             this.open();
