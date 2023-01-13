@@ -16,21 +16,25 @@ import fragmentRGB from '../../shaders/rgb/fragment.glsl';
 
 // Class - ThreeRenderer - https://threejs.org/docs/#api/en/renderers/WebGLRenderer
 export default class ThreeExperience extends ThreeRenderer  {
-    constructor(options) {
+    constructor(options, items) {
         super(options);
         this.options = options;
         this.tl = gsap.timeline();
+        this.playing = false;
+        this.rafID = null;
+        
         this.setControls();
         this.setMaterials();
         this.setObjects();
-        this.bind();
+        this.bindEvents();
         this.resize();
+        this.play();
     }
 
     setControls() {
         if (this.options.orbitControls) {
             this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-            this.controls.enableDamping = true
+            this.controls.enableDamping = true;
         }
     }
 
@@ -101,8 +105,22 @@ export default class ThreeExperience extends ThreeRenderer  {
         this.resizeRenderer();
     }
 
-    bind() {
-        console.log('Bind ThreeExperience Events');
+    bindEvents() {
+        console.log('ThreeExperience binding');
+    }
+
+    play() {
+        if (!this.playing) {
+            this.update();
+            this.playing = true;
+        }
+    }
+
+    stop() {
+        if (this.playing) {
+            this.cancelAnimationFrame(this.rafID);
+            this.playing = false;
+        }
     }
 
     update() {
@@ -116,13 +134,20 @@ export default class ThreeExperience extends ThreeRenderer  {
                 value.uniforms.iTime.value = this.time.elapsed;
             }
         }
-    
+
+        if(this.meshes) {
+            this.meshes[2].position.z = Math.sin(this.time.elapsed);
+            this.meshes[2].position.y = Math.cos(this.time.elapsed);
+        }
+       
         if (this.controls) {
             this.controls.update();
         }
 
         if (this.renderer) {
             this.renderer.render(this.scene, this.camera);
-        }   
+        }
+
+        this.rafID = requestAnimationFrame(this.update.bind(this));
     }
 }

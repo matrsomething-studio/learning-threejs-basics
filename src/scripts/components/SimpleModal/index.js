@@ -8,7 +8,7 @@ export default class SimpleModal {
         this.closeBtn = this.modal.querySelector('[data-modal-close]');
         this.isOpen = false;
 
-        this.bind();
+        this.bindEvents();
     }
 
     open() {        
@@ -29,7 +29,7 @@ export default class SimpleModal {
         }
     }
 
-    bind() {
+    bindEvents() {
         this.openBtn.addEventListener('click', (e) => {
             e.preventDefault();
             this.open();

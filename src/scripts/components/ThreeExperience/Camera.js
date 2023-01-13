@@ -17,6 +17,7 @@ export default class ThreeCamera extends ThreeScene  {
         );
         this.camera.position.set(0, 0, 3);
         this.camera.lookAt(0, 0, 0);
+        
         this.resizeCamera();
     }
 

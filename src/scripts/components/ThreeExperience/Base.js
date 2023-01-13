@@ -11,8 +11,8 @@ export default class ThreeBase {
         this.height = window.innerHeight;
         this.imageAspect = this.options.imageAspect || (1080/1920);
         
-        this.time = { start: Date.now(), last: 0, elapsed: 0, delta: 0 };
         this.clock = new THREE.Clock();
+        this.time = { start: Date.now(), previous: 0, elapsed: 0, delta: 0 };
         
         this.meshes = [];
         this.lights = [];
@@ -30,7 +30,7 @@ export default class ThreeBase {
 
     updateTime() {
         this.time.elapsed = this.clock.getElapsedTime();
-        this.time.delta = this.time.elapsed - this.time.last;
-        this.time.elapsed = this.time.elapsed;
+        this.time.delta = this.time.elapsed - this.time.previous;
+        this.time.previous = this.time.elapsed;
     }
 }
