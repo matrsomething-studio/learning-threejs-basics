@@ -11,7 +11,7 @@ export default class SimpleModal {
         this.bindEvents();
     }
 
-    open() {        
+    open() {
         this.modal.classList.add('modal-open');
         this.isOpen = true;
 
@@ -35,7 +35,7 @@ export default class SimpleModal {
             this.open();
         });
 
-        this.closeBtn.addEventListener('click', () => {
+        this.closeBtn.addEventListener('click', (e) => {
             this.close();
         });
     }

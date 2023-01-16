@@ -9,6 +9,7 @@
 @import 'shared/base/debugger';
 
 // Shared - Component(s)
+@import 'shared/components/preloader';
 @import 'shared/components/modal';
 
 // Shared - Templates(s)
@@ -33,4 +34,4 @@
 
 #footer {
     bottom: 0
-   }
+}

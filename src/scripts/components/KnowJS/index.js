@@ -3,7 +3,7 @@ export default class KnowJS {
     constructor(options) {
         this.options = options;
         this.html = document.querySelector('html');
-        
+
         if (!this.isJSEnabled) {
             this.html.classList.remove('no-js');
             this.html.classList.add('js');
@@ -26,22 +26,28 @@ export default class KnowJS {
         let canvas = document.createElement('canvas');
 
         if (typeof canvas.getContext === 'function') {
-            return !!(canvas.getContext('webgl') || canvas.getContext('experimental-webgl'));
+            return !!(
+                canvas.getContext('webgl') ||
+                canvas.getContext('experimental-webgl')
+            );
         }
-    };
+    }
 
     get isRetina() {
-        return ('devicePixelRatio' in window && window.devicePixelRatio >= 1.5);
-    };
-    
+        return 'devicePixelRatio' in window && window.devicePixelRatio >= 1.5;
+    }
+
     get isJSEnabled() {
         return !this.html.classList.contains('no-js') ? true : false;
-    };
+    }
 
-    get isTouchEnabled() { 
-        return !!(( 'ontouchstart' in window ) ||  
-            ( window.DocumentTouch && document instanceof window.DocumentTouch) ||
-            ( navigator.maxTouchPoints > 0 ) || 
-            ( navigator.msMaxTouchPoints > 0 )); 
-    };
+    get isTouchEnabled() {
+        return !!(
+            'ontouchstart' in window ||
+            (window.DocumentTouch &&
+                document instanceof window.DocumentTouch) ||
+            navigator.maxTouchPoints > 0 ||
+            navigator.msMaxTouchPoints > 0
+        );
+    }
 }
