@@ -1,45 +1,64 @@
 // Style(s)
 import '../styles/main.scss';
 
+// Components(s)
+import SimpleModal from './components/SimpleModal';
+import KnowJS from './components/KnowJS';
+import ThreeExperience from './components/ThreeExperience';
 
-// Module(s)
-import NoJS from './modules/NoJS';
-import THREEJS_SCENE_MODULE from './modules/THREEJS_SCENE_MODULE';
+// App - https://prettier.io/
+const App = (() => {
+    let JSKnow = null;
+    let DemoModal = null;
+    let DemoExp = null;
 
-
-// Main
-const APP = (() => {
-    let NO_JS = null;
-    let THREEJS_SCENE_NAME = null;
-    let RAFID = null;
-
-    function raf() {
-        THREEJS_SCENE_NAME.animate();
-        RAFID = requestAnimationFrame(raf);
-    }
-
-    function bindWindowEvents() {
+    function bindEvents() {
         window.addEventListener('resize', (e) => {
-            THREEJS_SCENE_NAME.resize();
+            DemoExp.resize();
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            DemoExp.mouse = e;
+            DemoExp.cursor.x = e.clientX / DemoExp.width - 0.5;
+            DemoExp.cursor.y = e.clientY / DemoExp.height - 0.5;
+        });
+
+        window.addEventListener('wheel', (e) => {
+            DemoExp.wheel = e;
+        });
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                DemoModal.close();
+            }
         });
     }
 
     function init() {
-        NO_JS = new NoJS();
-        THREEJS_SCENE_NAME = new THREEJS_SCENE_MODULE({ sceneContainer: '#scene', orbitControls: true });
-        bindWindowEvents();
-        requestAnimationFrame(raf);
+        JSKnow = new KnowJS();
+        DemoModal = new SimpleModal({
+            domSelector: 'data-modal="MODAL-ID"',
+            overflowHide: false,
+        });
+        DemoExp = new ThreeExperience({
+            domSelector: '#scene',
+            orbitControls: true,
+            showGUI: true,
+        });
+        bindEvents();
+
+        // Dirty preloader for now
+        document.querySelector('#preloader').classList.remove('active');
     }
-    
+
     return {
-        init: init
+        init: init,
     };
 })();
 
-
 // Load App
-document.addEventListener('readystatechange', e => {
+document.addEventListener('readystatechange', (e) => {
     if (e.target.readyState === 'complete') {
-        APP.init();
+        App.init();
     }
 });

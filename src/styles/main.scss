@@ -9,23 +9,29 @@
 @import 'shared/base/debugger';
 
 // Shared - Component(s)
-@import 'shared/components/component-name';
+@import 'shared/components/preloader';
+@import 'shared/components/modal';
 
 // Shared - Templates(s)
 @import 'shared/templates/template-name';
 
 // Overview - Partial(s)
-@import 'overview/partial-name';
+@import 'overview/scene';
 
 // Sample Page - Partial(s)
 @import 'sample-page/partial-name';
 
-#scene {
-    position: fixed;
-    top: 0;
-    left: 0;
+
+#header,
+#footer {
+    position: absolute;
     width: 100vw;
-    height: 100vh;
-    z-index: -1;
-    // pointer-events: none;
-  }
+}
+
+#header {
+ top: 0
+}
+
+#footer {
+    bottom: 0
+}

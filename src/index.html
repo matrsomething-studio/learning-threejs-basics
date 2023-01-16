@@ -16,9 +16,46 @@
     <meta name="twitter:site" content="@ProjectNameGoesHere">
     <meta name="twitter:card" content="summary_large_image">
   </head>
-  
-  <body>
-    <div id="scene"></div>
-    <script type="module" src="./scripts/main.js"></script>
+
+  <body class="page">
+    <header id="header" role="contentinfo">
+      <section class="section section-PARTIAL-NAME">
+        <div class="container">
+          <div class="row">
+            <h1>Header Partial</h1>
+          </div>
+        </div>
+      </section>
+    </header>
+    
+    <main id="main" role="main">
+      <section class="section section-scene">
+        <div id="scene">
+          <div style="position: absolute; width: 100%; text-align: center; bottom: 15%;">
+            <a data-modal="MODAL-ID" href="#" target="_blank">Learn More</a>
+          </div>
+        </div>
+      </section>
+      
+      <div id="MODAL-ID" class="modal modal-full-viewport" role="dialog" tabindex="-1">
+        <button class="modal-close" data-modal-close aria-label="Close"></button>
+        <div class="modal-content" style="text-align: center; padding-top: 30vh;">
+          <h2>Hello world, this is a stater ThreeJS scaffold using <a href="https://vitejs.dev/" target="_blank">ViteJS</a> and <a href="https://getbootstrap.com/docs/5.0/getting-started/introduction/" target="_blank">Bootstrap</a>.</h2>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" role="contentinfo">
+      <section class="section section-PARTIAL-NAME">
+        <div class="container">
+          <div class="row">
+            <h1>Footer Partial</h1>
+          </div>
+        </div>
+      </section>
+    </footer>
+
+    <div id="preloader" class="active"></div>
+    <script defer type="module" src="./scripts/main.js"></script>
   </body>
 </html>

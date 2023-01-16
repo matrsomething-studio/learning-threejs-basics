@@ -1,24 +1,28 @@
 {
   "name": "MY-COOL-PROJECT-NAME",
+  "repository": "#",
   "private": true,
   "version": "0.0.0",
+  "license": "UNLICENSED",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite serve --host",
     "build": "vite build",
     "preview": "vite preview",
     "clean": "rm -rf dist/*",
-    "commit-check": "git add . && git commit -m 'dev: checkpoint' && git push"
+    "com-check": "git add . && git commit -m 'dev: checkpoint' && git push"
   },
   "devDependencies": {
     "sass": "^1.57.1",
     "vite": "^4.0.0",
-    "vite-plugin-glsl": "^1.0.2"
+    "vite-plugin-glsl": "^1.0.2",
+    "dat.gui": "^0.7.9",
+    "lil-gui": "^0.17.0"
   },
   "dependencies": {
     "bootstrap": "^5.2.3",
-    "dat.gui": "^0.7.9",
     "gsap": "^3.11.4",
+    "stats.js": "^0.17.0",
     "three": "^0.148.0"
   }
 }
