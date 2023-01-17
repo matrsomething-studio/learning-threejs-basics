@@ -25,6 +25,7 @@ const App = (() => {
 
         window.addEventListener('wheel', (e) => {
             DemoExp.wheel = e;
+            DemoExp.setSpeed();
         });
 
         window.addEventListener('keydown', (e) => {
@@ -42,13 +43,11 @@ const App = (() => {
         });
         DemoExp = new ThreeExperience({
             domSelector: '#scene',
-            orbitControls: true,
+            orbitControls: false,
             showGUI: true,
         });
-        bindEvents();
 
-        // Dirty preloader for now
-        document.querySelector('#preloader').classList.remove('active');
+        bindEvents();
     }
 
     return {

@@ -12,8 +12,11 @@ export default class ThreeExperience extends ThreeControls {
         this.tl = gsap.timeline();
         this.playing = false;
         this.rafID = null;
-
-        this.bindEvents();
+        this.speed = {
+            value: this.wheel.deltaY || 0,
+            scale: .00095,
+            friction: 0.82,
+        };
         this.resize();
         this.play();
     }
@@ -24,8 +27,8 @@ export default class ThreeExperience extends ThreeControls {
         this.resizeRenderer();
     }
 
-    bindEvents() {
-       // ThreeExperience event binding
+    setSpeed() {
+        this.speed.value += (this.wheel.deltaY * this.speed.scale);
     }
 
     play() {
@@ -43,9 +46,12 @@ export default class ThreeExperience extends ThreeControls {
     }
 
     update() {
+        // Friction is persiant force always applied
+        this.speed.value *= this.speed.friction;
+
         this.updateTime();
         this.updateMaterials();
-        this.updateMeshes();
+        this.updateMeshes(this.speed.value);
         this.updateLights();
         this.updateControls();
         this.updateRenderer();

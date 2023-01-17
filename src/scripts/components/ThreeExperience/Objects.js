@@ -18,16 +18,18 @@ export default class ThreeObjects extends ThreeRenderer {
         super(options);
         this.options = options;
         this.meshes = [];
+        this.meshGroup = new THREE.Group();
         this.lights = [];
         this.materials = {};
-        this.textureLoader = new THREE.TextureLoader();
+
+        // this.textureLoader = new THREE.TextureLoader();
         // this.GLTFLoader = new GLTFLoader();
 
         this.setMaterials();
         this.setMeshes();
         // this.setImports();
         this.setLights();
-        this.setDataGUI();
+        // this.setDataGUI();
     }
 
     setDataGUI() {
@@ -48,18 +50,25 @@ export default class ThreeObjects extends ThreeRenderer {
                 iMouse: { value: this.mouse },
             },
             // wireframe: true,
-            vertexShader: vertexRGB,
+            // vertexShader: vertexRGB,
             transparent: true,
             fragmentShader: fragmentRGB,
         });
     }
 
     setMeshes() {
-        const planeGeo = new THREE.PlaneGeometry(1, 1, 1, 1);
-        const plane = new THREE.Mesh(planeGeo, this.materials.rgb);
+        let planeGeo = null
+        let plane = null;
 
-        this.scene.add(plane);
-        this.meshes.push(plane);
+        for (let i =  1; i <= 3; i++) {
+            planeGeo = new THREE.PlaneGeometry(.5, 2, 1, 1);
+            plane = new THREE.Mesh(planeGeo, this.materials.rgb);
+            plane.position.x = (i === 1) ? 0 : plane.position.x + (i - 1) * 0.55        
+            this.meshes.push(plane);
+            this.meshGroup.add(plane);
+        }
+
+        this.scene.add(this.meshGroup);
     }
 
     setImports() {
@@ -84,9 +93,9 @@ export default class ThreeObjects extends ThreeRenderer {
         }
     }
 
-    updateMeshes() {
+    updateMeshes(speed, scale) {
         if (this.meshes.length > 0) {
-            // Update Meshes
+            this.meshGroup.position.x += speed;
         }
     }
 
