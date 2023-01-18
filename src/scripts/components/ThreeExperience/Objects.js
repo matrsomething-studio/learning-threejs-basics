@@ -18,6 +18,7 @@ export default class ThreeObjects extends ThreeRenderer {
         this.meshGroup = new THREE.Group();
         this.lights = [];
         this.materials = {};
+        this.indx = 0;
         this.slideIndx = document.querySelector('#slide-indx');
 
         this.setMaterials();
@@ -86,16 +87,22 @@ export default class ThreeObjects extends ThreeRenderer {
             //     el.scale.set(Math.abs((1 * speed))  + 1, Math.abs((1.5**i * speed)) + 1, 1);
             //     i += .5;
             // });
-   
-            this.meshGroup.position.x -= speed;
 
-            if (this.meshGroup.position.x <= 0 && this.meshGroup.position.x >= -1.25) {
-                this.slideIndx.innerHTML = 1;
+            this.meshGroup.position.x -= speed;
+            // this.meshGroup.position.x = -3.76;
+            // this.meshGroup.position.x = -6.26;
+
+            if (this.meshGroup.position.x >= -1.25) {
+                this.indx = 0;
             } else if (this.meshGroup.position.x <= -1.26 && this.meshGroup.position.x >= -3.75) {
-                this.slideIndx.innerHTML = 2;
+                this.indx = 1;
             } else if (this.meshGroup.position.x <= -3.76 && this.meshGroup.position.x >= -6.26) {
-                this.slideIndx.innerHTML = 3;
+                this.indx = 2;
+            }else if (this.meshGroup.position.x <= -3.76 && this.meshGroup.position.x >= -6.26) {
+                this.indx = 2;
             }
+
+            this.slideIndx.innerHTML = this.indx + 1;
         }
     }
 
