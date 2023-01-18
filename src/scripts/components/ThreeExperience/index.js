@@ -15,8 +15,9 @@ export default class ThreeExperience extends ThreeControls {
         this.speed = {
             value: this.wheel.deltaY || 0,
             scale: .00095,
-            friction: 0.82,
+            friction: 0.75,
         };
+        this.pos = 0;
         this.resize();
         this.play();
     }
@@ -29,6 +30,10 @@ export default class ThreeExperience extends ThreeControls {
 
     setSpeed() {
         this.speed.value += (this.wheel.deltaY * this.speed.scale);
+    }
+
+    lerp(a, b, t) {
+        return ((1 - t) * a + t * b);
     }
 
     play() {
@@ -46,14 +51,14 @@ export default class ThreeExperience extends ThreeControls {
     }
 
     update() {
-        // Friction is persiant force always applied
         this.speed.value *= this.speed.friction;
+        this.pos = this.lerp(this.pos, this.speed.value, .08);
 
         this.updateTime();
         this.updateMaterials();
-        this.updateMeshes(this.speed.value);
-        this.updateLights();
-        this.updateControls();
+        this.updateMeshes(this.pos);
+        // this.updateLights();
+        // this.updateControls();
         this.updateRenderer();
         this.rafID = requestAnimationFrame(this.update.bind(this));
     }

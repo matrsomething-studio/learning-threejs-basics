@@ -44,7 +44,7 @@ const App = (() => {
         DemoExp = new ThreeExperience({
             domSelector: '#scene',
             orbitControls: false,
-            showGUI: true,
+            showGUI: false
         });
 
         bindEvents();

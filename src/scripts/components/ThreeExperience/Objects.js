@@ -1,9 +1,6 @@
 // Docs - https://threejs.org/ & https://r105.threejsfundamentals.org/
 import * as THREE from 'three';
 
-// https://threejs.org/docs/#examples/en/loaders/GLTFLoader
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-
 // Components(s)
 import ThreeRenderer from './Renderer';
 import ThreeDataGUI from './DataGUI';
@@ -21,15 +18,12 @@ export default class ThreeObjects extends ThreeRenderer {
         this.meshGroup = new THREE.Group();
         this.lights = [];
         this.materials = {};
-
-        // this.textureLoader = new THREE.TextureLoader();
-        // this.GLTFLoader = new GLTFLoader();
+        this.slideIndx = document.querySelector('#slide-indx');
 
         this.setMaterials();
         this.setMeshes();
-        // this.setImports();
         this.setLights();
-        // this.setDataGUI();
+        this.setDataGUI();
     }
 
     setDataGUI() {
@@ -61,23 +55,14 @@ export default class ThreeObjects extends ThreeRenderer {
         let plane = null;
 
         for (let i =  1; i <= 3; i++) {
-            planeGeo = new THREE.PlaneGeometry(.5, 2, 1, 1);
+            planeGeo = new THREE.PlaneGeometry(2, 2.5, 1, 1);
             plane = new THREE.Mesh(planeGeo, this.materials.rgb);
-            plane.position.x = (i === 1) ? 0 : plane.position.x + (i - 1) * 0.55        
+            plane.position.x = (i === 1) ? 0 : plane.position.x + (i - 1) * 2.5;     
             this.meshes.push(plane);
             this.meshGroup.add(plane);
         }
 
         this.scene.add(this.meshGroup);
-    }
-
-    setImports() {
-        this.GLTFLoader.load('data/scene.gltf', (gltf) => {
-            const scene = gltf.scene;
-            scene.scale.set(0.05, 0.05, 0.05);
-            scene.position.set(2, 0.0, 0.0);
-            this.scene.add(scene);
-        });
     }
 
     setLights() {
@@ -93,9 +78,24 @@ export default class ThreeObjects extends ThreeRenderer {
         }
     }
 
-    updateMeshes(speed, scale) {
+    updateMeshes(speed) {
         if (this.meshes.length > 0) {
-            this.meshGroup.position.x += speed;
+            let i = .5;
+
+            // (this.meshGroup.children).forEach(el => {
+            //     el.scale.set(Math.abs((1 * speed))  + 1, Math.abs((1.5**i * speed)) + 1, 1);
+            //     i += .5;
+            // });
+   
+            this.meshGroup.position.x -= speed;
+
+            if (this.meshGroup.position.x <= 0 && this.meshGroup.position.x >= -1.25) {
+                this.slideIndx.innerHTML = 1;
+            } else if (this.meshGroup.position.x <= -1.26 && this.meshGroup.position.x >= -3.75) {
+                this.slideIndx.innerHTML = 2;
+            } else if (this.meshGroup.position.x <= -3.76 && this.meshGroup.position.x >= -6.26) {
+                this.slideIndx.innerHTML = 3;
+            }
         }
     }
 
