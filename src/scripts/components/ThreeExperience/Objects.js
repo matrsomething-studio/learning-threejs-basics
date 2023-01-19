@@ -19,14 +19,15 @@ export default class ThreeObjects extends ThreeRenderer {
         this.lights = [];
         this.materials = {};
         
-        // Slider
+        // Cards
         this.indx = 1;
         this.slideIndx = document.querySelector('#slide-indx');
         this.card = {
             total: 4,
             width: 2,
-            height: 2.5,
-            gap: 1.01
+            height: 2,
+            gap: 0.1,
+            ranges: []
         };
 
         this.setMaterials();
@@ -63,23 +64,33 @@ export default class ThreeObjects extends ThreeRenderer {
         let planeGeo = null
         let plane = null;
 
-        if (this.card.gap < 1.0) {
-            throw('Card gap must be >= 1.00');
+        if (this.card.gap < 0) {
+            throw('Card gap must be 0 or greater');
         }
 
         for (let n =  1; n <= this.card.total; n++) {
             planeGeo = new THREE.PlaneGeometry(this.card.width, this.card.height, 1, 1);
             plane = new THREE.Mesh(planeGeo);
             
-            // Generate card at nth positon plus card gap
-            plane.position.x = (n === 1) ? 0 : plane.position.x + (n - 1) * (this.card.width * this.card.gap);     
+            // Generate at nth position card width plus gap
+            plane.position.x = (n - 1) * (this.card.width + this.card.gap);
+
+            // Collect care range data
+            this.card.ranges[n - 1] = { 
+                start: plane.position.x - (this.card.width / 2), 
+                mid: plane.position.x, 
+                end: plane.position.x + (this.card.width / 2)
+            };
             
             this.meshes.push(plane);
             this.meshGroup.add(plane);
         }
 
-        // Set the slider flush left at {0, 0}
-        this.meshGroup.position.x = this.card.width / 2;
+        console.log(this.card.ranges);
+
+        // Set the cards flush left at {0, 0}
+        // this.meshGroup.position.x = this.card.width / 2;
+
         this.scene.add(this.meshGroup);
     }
 
@@ -99,31 +110,10 @@ export default class ThreeObjects extends ThreeRenderer {
     updateMeshes(speed) {
         if (this.meshes.length > 0) {
             this.meshGroup.position.x -= speed;
-            
-            // this.meshGroup.position.x = 1.00;
 
-             // 1 : (card.width + card.gap)
-             // (x <= min && x >= max)
-            if (this.meshGroup.position.x <= 1.00 && this.meshGroup.position.x >= -1.00) {
-                this.indx = 1;
-            } else if (this.meshGroup.position.x <= -1.00 && this.meshGroup.position.x >= -3.00) {
-                this.indx = 2;
-            } else if (this.meshGroup.position.x <= -3.00 && this.meshGroup.position.x >= -5.00 ) {
-                this.indx = 3;
-            } else if ( this.meshGroup.position.x <= -5.00 && this.meshGroup.position.x >= -7.00){
-                this.indx = 4;
-            }
-
-            for (let n = 1; n <= this.card.total; n++) {
-                let min = (n === 1) ? 1.00 : -((this.card.width * n) - (this.card.width * .5) - this.card.gap);
-                let max = min - this.card.gap;
-
-                console.log('Index', n);
-                // console.log('Min', min);
-                console.log('Max', max);
-
-                if (this.meshGroup.position.x <= min && this.meshGroup.position.x >= max) {
-                    this.indx = n;
+            for (let n = 0; n < this.card.total; n++) {
+                if (this.meshGroup.position.x <= -this.card.ranges[n].start && this.meshGroup.position.x >= -this.card.ranges[n].end) {
+                    this.indx = n + 1;
                 } 
             }
 
