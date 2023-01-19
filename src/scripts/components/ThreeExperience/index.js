@@ -14,15 +14,15 @@ export default class ThreeExperience extends ThreeControls {
         this.rafID = null;
         this.speed = {
             value: this.wheel.deltaY || 0,
-            scale: .00095,
+            scale: .0005,
             friction: 0.9,
         };
-        this.pos = 0;
         this.resize();
         this.play();
     }
 
     resize() {
+        // this.setMeshes();
         this.resizeWindow();
         this.resizeCamera();
         this.resizeRenderer();
@@ -50,10 +50,8 @@ export default class ThreeExperience extends ThreeControls {
         this.speed.value *= this.speed.friction;
 
         this.updateTime();
-        this.updateMaterials();
         this.updateMeshes(this.speed.value);
-        // this.updateLights();
-        // this.updateControls();
+        this.updateControls();
         this.updateRenderer();
         this.rafID = requestAnimationFrame(this.update.bind(this));
     }

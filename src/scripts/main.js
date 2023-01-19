@@ -2,7 +2,6 @@
 import '../styles/main.scss';
 
 // Components(s)
-import SimpleModal from './components/SimpleModal';
 import KnowJS from './components/KnowJS';
 import ThreeExperience from './components/ThreeExperience';
 
@@ -37,10 +36,6 @@ const App = (() => {
 
     function init() {
         JSKnow = new KnowJS();
-        DemoModal = new SimpleModal({
-            domSelector: 'data-modal="MODAL-ID"',
-            overflowHide: false,
-        });
         DemoExp = new ThreeExperience({
             domSelector: '#scene',
             orbitControls: false,
