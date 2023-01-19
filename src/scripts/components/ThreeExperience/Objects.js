@@ -18,8 +18,15 @@ export default class ThreeObjects extends ThreeRenderer {
         this.meshGroup = new THREE.Group();
         this.lights = [];
         this.materials = {};
-        this.indx = 0;
+        
+        // Slider
+        this.indx = 1;
         this.slideIndx = document.querySelector('#slide-indx');
+        this.card = {
+            total: 4,
+            width: 2.5,
+            gap: 2.5
+        };
 
         this.setMaterials();
         this.setMeshes();
@@ -55,10 +62,10 @@ export default class ThreeObjects extends ThreeRenderer {
         let planeGeo = null
         let plane = null;
 
-        for (let i =  1; i <= 3; i++) {
-            planeGeo = new THREE.PlaneGeometry(2, 2.5, 1, 1);
+        for (let i =  1; i <= this.card.total; i++) {
+            planeGeo = new THREE.PlaneGeometry(2, this.card.width, 1, 1);
             plane = new THREE.Mesh(planeGeo, this.materials.rgb);
-            plane.position.x = (i === 1) ? 0 : plane.position.x + (i - 1) * 2.5;     
+            plane.position.x = (i === 1) ? 0 : plane.position.x + (i - 1) * this.card.gap;     
             this.meshes.push(plane);
             this.meshGroup.add(plane);
         }
@@ -81,28 +88,29 @@ export default class ThreeObjects extends ThreeRenderer {
 
     updateMeshes(speed) {
         if (this.meshes.length > 0) {
-            let i = .5;
-
-            // (this.meshGroup.children).forEach(el => {
-            //     el.scale.set(Math.abs((1 * speed))  + 1, Math.abs((1.5**i * speed)) + 1, 1);
-            //     i += .5;
-            // });
-
             this.meshGroup.position.x -= speed;
-            // this.meshGroup.position.x = -3.76;
-            // this.meshGroup.position.x = -6.26;
 
-            if (this.meshGroup.position.x >= -1.25) {
-                this.indx = 0;
-            } else if (this.meshGroup.position.x <= -1.26 && this.meshGroup.position.x >= -3.75) {
-                this.indx = 1;
-            } else if (this.meshGroup.position.x <= -3.76 && this.meshGroup.position.x >= -6.26) {
-                this.indx = 2;
-            }else if (this.meshGroup.position.x <= -3.76 && this.meshGroup.position.x >= -6.26) {
-                this.indx = 2;
+            // 1 : 2.00
+            // if (this.meshGroup.position.x <= -3.00 && this.meshGroup.position.x >= -1.00) {
+            //     this.indx = 1;
+            // } else if (this.meshGroup.position.x <= -1.00 && this.meshGroup.position.x >= -3.00) {
+            //     this.indx = 2;
+            // } else if (this.meshGroup.position.x <= -3.00 && this.meshGroup.position.x >= -5.00) {
+            //     this.indx = 3;
+            // } else if (this.meshGroup.position.x <= -5.00 && this.meshGroup.position.x >= -7.00){
+            //     this.indx = 4;
+            // }
+
+            for (let i = 1; i <= this.card.total; i++) {
+                let max = (this.card.gap * i + 1)  - this.card.gap;
+                let min = max - this.card.gap;
+
+                if (this.meshGroup.position.x <= -min && this.meshGroup.position.x >= -max) {
+                    this.indx = i;
+                } 
             }
 
-            this.slideIndx.innerHTML = this.indx + 1;
+            this.slideIndx.innerHTML = `${this.indx} of ${this.card.total}`;;
         }
     }
 
