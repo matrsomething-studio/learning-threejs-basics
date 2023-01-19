@@ -8,11 +8,14 @@ export default class ThreeExperience extends ThreeControls {
         this.options = options;
         this.playing = false;
         this.rafID = null;
+
+        // Speed
         this.speed = {
             value: this.wheel.deltaY || 0,
-            scale: .0005,
-            friction: 0.85,
+            scale: .0004,
+            friction: .9,
         };
+        
         this.resize();
         this.play();
     }

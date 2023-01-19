@@ -4,24 +4,19 @@ import * as THREE from 'three';
 // Components(s)
 import ThreeRenderer from './Renderer';
 
-const lerp = (start, end, amt) => (1 - amt) * start + amt * end;
-
 // Class - ThreeObjects - https://threejs.org/docs/?q=Scene#api/en/scenes/Scene
 export default class ThreeObjects extends ThreeRenderer {
     constructor(options) {
         super(options);
         this.options = options;
-        this.meshGroup = new THREE.Group();
-
+    
         // Cards
-        this.indx = 1;
-        this.progress = 0;
-        this.duration = this.width;
+        this.cardGroup = new THREE.Group();
         this.slideIndx = document.querySelector('#slide-indx');
-        this.card = {
-            total: 30,
-            width: .5,
-            height: 1.9,
+        this.cardOptions = {
+            total: 8,
+            width: 2.15,
+            height: 2.75,
             gap: .12,
             ranges: []
         };
@@ -30,59 +25,61 @@ export default class ThreeObjects extends ThreeRenderer {
     }
 
     setMeshes() {
-        let planeGeo = null
-        let plane = null;
+        let cardGeo = null
+        let card = null;
 
-        if (this.card.gap < 0) {
+        if (this.cardOptions.gap < 0) {
             throw('Card gap must be 0 or greater');
         }
 
-        for (let n =  0; n < this.card.total; n++) {
-            planeGeo = new THREE.PlaneGeometry(this.card.width, this.card.height, 1, 1);
-            plane = new THREE.Mesh(planeGeo);
+        for (let n =  0; n < this.cardOptions.total; n++) {
+            cardGeo = new THREE.PlaneGeometry(this.cardOptions.width, this.cardOptions.height, 1, 1);
+            card = new THREE.Mesh(cardGeo);
             
             // Generate at nth position card width plus gap
-            plane.position.x = (n) * (this.card.width + this.card.gap);
+            card.position.x = (n) * (this.cardOptions.width + this.cardOptions.gap);
 
             // Collect care range data
-            this.card.ranges.push({ 
-                start: (plane.position.x - (this.card.width / 2)) - (this.card.gap / 2), 
-                mid: plane.position.x, 
-                end: (plane.position.x + (this.card.width / 2)) + (this.card.gap / 2)
+            this.cardOptions.ranges.push({ 
+                start: (card.position.x - (this.cardOptions.width / 2)) - (this.cardOptions.gap / 2), 
+                mid: card.position.x, 
+                end: (card.position.x + (this.cardOptions.width / 2)) + (this.cardOptions.gap / 2)
             });
             
-            this.meshGroup.add(plane);
-            
+            this.cardGroup.add(card);
         }
-        console.log(this.card.ranges);
-        // Set the cards flush left at {0, 0}
-        // this.meshGroup.position.x = this.card.width / 2;
 
-        this.scene.add(this.meshGroup);
+        // Set the cards flush left at {0, 0}
+        // this.cardGroup.position.x = this.cardOptions.width / 2;
+
+        // Add to scene
+        this.scene.add(this.cardGroup);
     }
 
-    updateMeshes(speed) {     
-        this.meshGroup.position.x -= speed;
+    updateMeshes(speed) {    
+        this.cardGroup.position.x -= speed;
 
         // Constrain scroll
-        let endConstraint = -this.card.ranges[this.card.ranges.length - 1].end;
+        let constrains = {
+            start: -this.cardOptions.ranges[0].start,
+            end: -this.cardOptions.ranges[this.cardOptions.ranges.length - 1].end
+        };
+        if (this.cardGroup.position.x >= constrains.start) {
+            this.cardGroup.position.x = constrains.start;
+        } 
 
-        if (this.meshGroup.position.x <= 0.0 && this.meshGroup.position.x >= endConstraint) {
-            this.meshGroup.position.x -= speed;
-        } else if (this.meshGroup.position.x >= 0.0) {
-            this.meshGroup.position.x = 0.0;
-        } else {
-            this.meshGroup.position.x = endConstraint;
-        }
+        if (this.cardGroup.position.x <= constrains.end) {
+            this.cardGroup.position.x = constrains.end;
+        } 
 
         // Determine current card index
-        for (let n = 0; n < this.card.total; n++) {
-            if (this.meshGroup.position.x <= -this.card.ranges[n].start && this.meshGroup.position.x >= -this.card.ranges[n].end) {
+        for (let n = 0; n < this.cardOptions.total; n++) {
+            if (this.cardGroup.position.x <= -this.cardOptions.ranges[n].start && this.cardGroup.position.x >= -this.cardOptions.ranges[n].end) {
                 this.indx = n + 1;
             } 
         }
 
         // UI update 
-        this.slideIndx.innerHTML = `${this.indx} of ${this.card.total}`;
+        this.slideIndx.innerHTML = `${this.indx} of ${this.cardOptions.total}`;
     }
 }
