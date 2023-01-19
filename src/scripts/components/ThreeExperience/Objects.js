@@ -24,8 +24,9 @@ export default class ThreeObjects extends ThreeRenderer {
         this.slideIndx = document.querySelector('#slide-indx');
         this.card = {
             total: 4,
-            width: 2.5,
-            gap: 2.5
+            width: 2,
+            height: 2.5,
+            gap: 1.01
         };
 
         this.setMaterials();
@@ -62,14 +63,23 @@ export default class ThreeObjects extends ThreeRenderer {
         let planeGeo = null
         let plane = null;
 
-        for (let i =  1; i <= this.card.total; i++) {
-            planeGeo = new THREE.PlaneGeometry(2, this.card.width, 1, 1);
-            plane = new THREE.Mesh(planeGeo, this.materials.rgb);
-            plane.position.x = (i === 1) ? 0 : plane.position.x + (i - 1) * this.card.gap;     
+        if (this.card.gap < 1.0) {
+            throw('Card gap must be >= 1.00');
+        }
+
+        for (let n =  1; n <= this.card.total; n++) {
+            planeGeo = new THREE.PlaneGeometry(this.card.width, this.card.height, 1, 1);
+            plane = new THREE.Mesh(planeGeo);
+            
+            // Generate card at nth positon plus card gap
+            plane.position.x = (n === 1) ? 0 : plane.position.x + (n - 1) * (this.card.width * this.card.gap);     
+            
             this.meshes.push(plane);
             this.meshGroup.add(plane);
         }
 
+        // Set the slider flush left at {0, 0}
+        this.meshGroup.position.x = this.card.width / 2;
         this.scene.add(this.meshGroup);
     }
 
@@ -89,24 +99,31 @@ export default class ThreeObjects extends ThreeRenderer {
     updateMeshes(speed) {
         if (this.meshes.length > 0) {
             this.meshGroup.position.x -= speed;
+            
+            // this.meshGroup.position.x = 1.00;
 
-            // 1 : 2.00
-            // if (this.meshGroup.position.x <= -3.00 && this.meshGroup.position.x >= -1.00) {
-            //     this.indx = 1;
-            // } else if (this.meshGroup.position.x <= -1.00 && this.meshGroup.position.x >= -3.00) {
-            //     this.indx = 2;
-            // } else if (this.meshGroup.position.x <= -3.00 && this.meshGroup.position.x >= -5.00) {
-            //     this.indx = 3;
-            // } else if (this.meshGroup.position.x <= -5.00 && this.meshGroup.position.x >= -7.00){
-            //     this.indx = 4;
-            // }
+             // 1 : (card.width + card.gap)
+             // (x <= min && x >= max)
+            if (this.meshGroup.position.x <= 1.00 && this.meshGroup.position.x >= -1.00) {
+                this.indx = 1;
+            } else if (this.meshGroup.position.x <= -1.00 && this.meshGroup.position.x >= -3.00) {
+                this.indx = 2;
+            } else if (this.meshGroup.position.x <= -3.00 && this.meshGroup.position.x >= -5.00 ) {
+                this.indx = 3;
+            } else if ( this.meshGroup.position.x <= -5.00 && this.meshGroup.position.x >= -7.00){
+                this.indx = 4;
+            }
 
-            for (let i = 1; i <= this.card.total; i++) {
-                let max = (this.card.gap * i + 1)  - this.card.gap;
-                let min = max - this.card.gap;
+            for (let n = 1; n <= this.card.total; n++) {
+                let min = (n === 1) ? 1.00 : -((this.card.width * n) - (this.card.width * .5) - this.card.gap);
+                let max = min - this.card.gap;
 
-                if (this.meshGroup.position.x <= -min && this.meshGroup.position.x >= -max) {
-                    this.indx = i;
+                console.log('Index', n);
+                // console.log('Min', min);
+                console.log('Max', max);
+
+                if (this.meshGroup.position.x <= min && this.meshGroup.position.x >= max) {
+                    this.indx = n;
                 } 
             }
 

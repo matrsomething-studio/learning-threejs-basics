@@ -15,7 +15,7 @@ export default class ThreeExperience extends ThreeControls {
         this.speed = {
             value: this.wheel.deltaY || 0,
             scale: .00095,
-            friction: 0.75,
+            friction: 0.82,
         };
         this.pos = 0;
         this.resize();
