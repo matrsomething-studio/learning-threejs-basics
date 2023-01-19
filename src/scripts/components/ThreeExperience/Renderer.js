@@ -9,6 +9,7 @@ export default class ThreeRenderer extends ThreeCamera {
     constructor(options) {
         super(options);
         this.options = options;
+
         this.renderer = new THREE.WebGLRenderer({
             antialias: true,
             alpha: true,
@@ -17,6 +18,7 @@ export default class ThreeRenderer extends ThreeCamera {
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         this.renderer.sortObjects = false;
         this.renderer.outputEncoding = THREE.sRGBEncoding;
+
         this.container.appendChild(this.renderer.domElement);
     }
 

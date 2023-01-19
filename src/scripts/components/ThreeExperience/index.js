@@ -1,6 +1,10 @@
 // Components(s)
 import ThreeControls from './Controls';
 
+function lerp(a, b, t) {
+    return ((1 - t) * a + t * b);
+    }
+
 // Class - ThreeRenderer - https://threejs.org/docs/#api/en/renderers/WebGLRenderer
 export default class ThreeExperience extends ThreeControls {
     constructor(options, items) {
@@ -12,8 +16,8 @@ export default class ThreeExperience extends ThreeControls {
         // Speed
         this.speed = {
             value: this.wheel.deltaY || 0,
-            scale: .0004,
-            friction: .9,
+            scale: .0005,
+            friction: .98,
         };
         
         this.resize();
@@ -21,14 +25,9 @@ export default class ThreeExperience extends ThreeControls {
     }
 
     resize() {
-        // this.setMeshes();
         this.resizeWindow();
         this.resizeCamera();
         this.resizeRenderer();
-    }
-
-    setSpeed() {
-        this.speed.value += (this.wheel.deltaY * this.speed.scale);
     }
 
     play() {
@@ -43,6 +42,10 @@ export default class ThreeExperience extends ThreeControls {
             this.playing = false;
             window.cancelAnimationFrame(this.rafID);
         }
+    }
+
+    setSpeed() {
+        this.speed.value += (this.wheel.deltaY * this.speed.scale);
     }
 
     update() {

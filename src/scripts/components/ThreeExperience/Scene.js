@@ -9,6 +9,7 @@ export default class ThreeScene extends ThreeBase {
     constructor(options) {
         super(options);
         this.options = options;
+        
         this.scene = new THREE.Scene();
         this.scene.background = null;
         this.scene.backgroundBlurriness = 0;
@@ -16,7 +17,7 @@ export default class ThreeScene extends ThreeBase {
         this.scene.environment = null;
         this.scene.fog = new THREE.Fog(0x191919, 1.0, 10.0);
         this.scene.overrideMaterial = null;
-        
+
         this.scene.add(new THREE.AxesHelper(2));
     }
 

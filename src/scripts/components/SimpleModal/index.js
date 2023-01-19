@@ -2,6 +2,7 @@
 export default class SimpleModal {
     constructor(options) {
         this.options = options;
+        
         this.html = document.querySelector('html');
         this.openBtn = document.querySelector(`[${this.options.domSelector}]`);
         this.modal = document.getElementById(this.openBtn.dataset.modal);

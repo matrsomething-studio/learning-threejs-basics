@@ -4,7 +4,7 @@ import * as THREE from 'three';
 // Components(s)
 import ThreeRenderer from './Renderer';
 
-// Class - ThreeObjects - https://threejs.org/docs/?q=Scene#api/en/scenes/Scene
+// Class - ThreeObjects - https://threejs.org/docs/
 export default class ThreeObjects extends ThreeRenderer {
     constructor(options) {
         super(options);
@@ -49,6 +49,12 @@ export default class ThreeObjects extends ThreeRenderer {
             this.cardGroup.add(card);
         }
 
+        this.cardOptions.constrains = {
+            start: -this.cardOptions.ranges[0].mid,
+            end: -this.cardOptions.ranges[this.cardOptions.ranges.length - 1].mid
+        };
+
+
         // Set the cards flush left at {0, 0}
         // this.cardGroup.position.x = this.cardOptions.width / 2;
 
@@ -56,20 +62,17 @@ export default class ThreeObjects extends ThreeRenderer {
         this.scene.add(this.cardGroup);
     }
 
-    updateMeshes(speed) {    
+    updateMeshes(speed) {  
+        // Update position  
         this.cardGroup.position.x -= speed;
 
         // Constrain scroll
-        let constrains = {
-            start: -this.cardOptions.ranges[0].start,
-            end: -this.cardOptions.ranges[this.cardOptions.ranges.length - 1].end
-        };
-        if (this.cardGroup.position.x >= constrains.start) {
-            this.cardGroup.position.x = constrains.start;
+        if (this.cardGroup.position.x >= this.cardOptions.constrains.start) {
+            this.cardGroup.position.x = this.cardOptions.constrains.start;
         } 
 
-        if (this.cardGroup.position.x <= constrains.end) {
-            this.cardGroup.position.x = constrains.end;
+        if (this.cardGroup.position.x <= this.cardOptions.constrains.end) {
+            this.cardGroup.position.x = this.cardOptions.constrains.end;
         } 
 
         // Determine current card index
@@ -79,7 +82,7 @@ export default class ThreeObjects extends ThreeRenderer {
             } 
         }
 
-        // UI update 
-        this.slideIndx.innerHTML = `${this.indx} of ${this.cardOptions.total}`;
+        // Update UI 
+        this.slideIndx.innerHTML = `${this.cardGroup.position.x.toFixed(2)} <br/> ${this.indx} of ${this.cardOptions.total} ` ;
     }
 }
