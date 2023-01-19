@@ -23,10 +23,10 @@ export default class ThreeObjects extends ThreeRenderer {
         this.indx = 1;
         this.slideIndx = document.querySelector('#slide-indx');
         this.card = {
-            total: 4,
+            total: 6,
             width: 2,
             height: 2,
-            gap: 0.1,
+            gap: .1,
             ranges: []
         };
 
@@ -77,19 +77,18 @@ export default class ThreeObjects extends ThreeRenderer {
 
             // Collect care range data
             this.card.ranges[n - 1] = { 
-                start: plane.position.x - (this.card.width / 2), 
+                start: (plane.position.x - (this.card.width / 2)) - (this.card.gap / 2), 
                 mid: plane.position.x, 
-                end: plane.position.x + (this.card.width / 2)
+                end: (plane.position.x + (this.card.width / 2)) + (this.card.gap / 2)
             };
             
             this.meshes.push(plane);
             this.meshGroup.add(plane);
         }
 
-        console.log(this.card.ranges);
-
         // Set the cards flush left at {0, 0}
         // this.meshGroup.position.x = this.card.width / 2;
+        // this.meshGroup.position.x = -this.card.ranges[1].start;
 
         this.scene.add(this.meshGroup);
     }
@@ -117,7 +116,7 @@ export default class ThreeObjects extends ThreeRenderer {
                 } 
             }
 
-            this.slideIndx.innerHTML = `${this.indx} of ${this.card.total}`;;
+            this.slideIndx.innerHTML = `${this.indx} of ${this.card.total}`;
         }
     }
 
