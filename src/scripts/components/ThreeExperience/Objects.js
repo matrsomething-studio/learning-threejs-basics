@@ -4,21 +4,20 @@ import * as THREE from 'three';
 // Components(s)
 import ThreeRenderer from './Renderer';
 
-import { lerp } from '../../utils/math';
-
 // Class - ThreeObjects - https://threejs.org/docs/?q=Scene#api/en/scenes/Scene
 export default class ThreeObjects extends ThreeRenderer {
     constructor(options) {
         super(options);
         this.options = options;
-        this.meshes = [];
         this.meshGroup = new THREE.Group();
 
         // Cards
         this.indx = 1;
+        this.progress = 0;
+        this.duration = this.width;
         this.slideIndx = document.querySelector('#slide-indx');
         this.card = {
-            total: 20,
+            total: 6,
             width: .5,
             height: 1.75,
             gap: .1,
@@ -51,7 +50,6 @@ export default class ThreeObjects extends ThreeRenderer {
                 end: (plane.position.x + (this.card.width / 2)) + (this.card.gap / 2)
             });
             
-            this.meshes.push(plane);
             this.meshGroup.add(plane);
         }
 
@@ -61,29 +59,27 @@ export default class ThreeObjects extends ThreeRenderer {
         this.scene.add(this.meshGroup);
     }
 
-    updateMeshes(speed) {
-        if (this.meshes.length > 0) {            
-            if (this.card.moveCamera) {
-                this.camera.position.x -= speed;
-            } else {
-                this.meshGroup.position.x -= speed;
-            }
-
-            // Determine current card index
-            for (let n = 0; n < this.card.total; n++) {
-                if (this.card.moveCamera) {
-                    if (this.camera.position.x >= this.card.ranges[n].start && this.camera.position.x <= this.card.ranges[n].end) {
-                        this.indx = n + 1;
-                    } 
-                } else {
-                    if (this.meshGroup.position.x <= -this.card.ranges[n].start && this.meshGroup.position.x >= -this.card.ranges[n].end) {
-                        this.indx = n + 1;
-                    } 
-                }
-            }
-
-            // Update UI
-            this.slideIndx.innerHTML = `${this.indx} of ${this.card.total}`;
+    updateMeshes(speed) {     
+        if (this.card.moveCamera) {
+            this.camera.position.x -= speed;
+        } else {
+            this.meshGroup.position.x -= speed;
         }
+
+        // Determine current card index
+        for (let n = 0; n < this.card.total; n++) {
+            if (this.card.moveCamera) {
+                if (this.camera.position.x >= this.card.ranges[n].start && this.camera.position.x <= this.card.ranges[n].end) {
+                    this.indx = n + 1;
+                } 
+            } else {
+                if (this.meshGroup.position.x <= -this.card.ranges[n].start && this.meshGroup.position.x >= -this.card.ranges[n].end) {
+                    this.indx = n + 1;
+                } 
+            }
+        }
+
+        // Update UI
+        this.slideIndx.innerHTML = `${this.indx} of ${this.card.total}`;
     }
 }

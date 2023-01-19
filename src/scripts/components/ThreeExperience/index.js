@@ -1,15 +1,11 @@
 // Components(s)
 import ThreeControls from './Controls';
 
-// GSAP - https://greensock.com/docs/v3/GSAP/Timeline
-import { gsap, Quad } from 'gsap';
-
 // Class - ThreeRenderer - https://threejs.org/docs/#api/en/renderers/WebGLRenderer
 export default class ThreeExperience extends ThreeControls {
     constructor(options, items) {
         super(options);
         this.options = options;
-        this.tl = gsap.timeline();
         this.playing = false;
         this.rafID = null;
         this.speed = {
