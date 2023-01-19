@@ -4,6 +4,8 @@ import * as THREE from 'three';
 // Components(s)
 import ThreeRenderer from './Renderer';
 
+const lerp = (start, end, amt) => (1 - amt) * start + amt * end;
+
 // Class - ThreeObjects - https://threejs.org/docs/?q=Scene#api/en/scenes/Scene
 export default class ThreeObjects extends ThreeRenderer {
     constructor(options) {
@@ -17,12 +19,11 @@ export default class ThreeObjects extends ThreeRenderer {
         this.duration = this.width;
         this.slideIndx = document.querySelector('#slide-indx');
         this.card = {
-            total: 6,
+            total: 30,
             width: .5,
-            height: 1.75,
-            gap: .1,
-            ranges: [],
-            moveCamera : false
+            height: 1.9,
+            gap: .12,
+            ranges: []
         };
 
         this.setMeshes();
@@ -36,12 +37,12 @@ export default class ThreeObjects extends ThreeRenderer {
             throw('Card gap must be 0 or greater');
         }
 
-        for (let n =  1; n <= this.card.total; n++) {
+        for (let n =  0; n < this.card.total; n++) {
             planeGeo = new THREE.PlaneGeometry(this.card.width, this.card.height, 1, 1);
             plane = new THREE.Mesh(planeGeo);
             
             // Generate at nth position card width plus gap
-            plane.position.x = (n - 1) * (this.card.width + this.card.gap);
+            plane.position.x = (n) * (this.card.width + this.card.gap);
 
             // Collect care range data
             this.card.ranges.push({ 
@@ -51,8 +52,9 @@ export default class ThreeObjects extends ThreeRenderer {
             });
             
             this.meshGroup.add(plane);
+            
         }
-
+        console.log(this.card.ranges);
         // Set the cards flush left at {0, 0}
         // this.meshGroup.position.x = this.card.width / 2;
 
@@ -60,26 +62,27 @@ export default class ThreeObjects extends ThreeRenderer {
     }
 
     updateMeshes(speed) {     
-        if (this.card.moveCamera) {
-            this.camera.position.x -= speed;
-        } else {
+        this.meshGroup.position.x -= speed;
+
+        // Constrain scroll
+        let endConstraint = -this.card.ranges[this.card.ranges.length - 1].end;
+
+        if (this.meshGroup.position.x <= 0.0 && this.meshGroup.position.x >= endConstraint) {
             this.meshGroup.position.x -= speed;
+        } else if (this.meshGroup.position.x >= 0.0) {
+            this.meshGroup.position.x = 0.0;
+        } else {
+            this.meshGroup.position.x = endConstraint;
         }
 
         // Determine current card index
         for (let n = 0; n < this.card.total; n++) {
-            if (this.card.moveCamera) {
-                if (this.camera.position.x >= this.card.ranges[n].start && this.camera.position.x <= this.card.ranges[n].end) {
-                    this.indx = n + 1;
-                } 
-            } else {
-                if (this.meshGroup.position.x <= -this.card.ranges[n].start && this.meshGroup.position.x >= -this.card.ranges[n].end) {
-                    this.indx = n + 1;
-                } 
-            }
+            if (this.meshGroup.position.x <= -this.card.ranges[n].start && this.meshGroup.position.x >= -this.card.ranges[n].end) {
+                this.indx = n + 1;
+            } 
         }
 
-        // Update UI
+        // UI update 
         this.slideIndx.innerHTML = `${this.indx} of ${this.card.total}`;
     }
 }
