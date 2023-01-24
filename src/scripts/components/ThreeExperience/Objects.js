@@ -4,6 +4,10 @@ import * as THREE from 'three';
 // Components(s)
 import ThreeRenderer from './Renderer';
 
+function lerp (start, end, amt){
+    return (1 - amt) * start + amt * end;
+}
+
 // Class - ThreeObjects - https://threejs.org/docs/
 export default class ThreeObjects extends ThreeRenderer {
     constructor(options) {
@@ -15,11 +19,15 @@ export default class ThreeObjects extends ThreeRenderer {
         this.slideIndx = document.querySelector('#slide-indx');
         this.cardOptions = {
             total: 8,
-            width: 2.15,
-            height: 2.75,
+            width: 2,
+            height: 3,
             gap: .12,
             ranges: []
         };
+
+        // Lerp
+        this.position = 0;
+        this.lerpAmt = 0.04;
 
         this.setMeshes();
     }
@@ -54,26 +62,25 @@ export default class ThreeObjects extends ThreeRenderer {
             end: -this.cardOptions.ranges[this.cardOptions.ranges.length - 1].mid
         };
 
-
         // Set the cards flush left at {0, 0}
         // this.cardGroup.position.x = this.cardOptions.width / 2;
+        
 
         // Add to scene
         this.scene.add(this.cardGroup);
     }
 
-    updateMeshes(speed) {  
-        // Update position  
-        this.cardGroup.position.x -= speed;
+    updateMeshes(scroll) {  
+        if (this.scroll.force > this.cardOptions.constrains.start) {
+            this.scroll.force = this.cardOptions.constrains.start;
+        } else if ( this.scroll.force <= this.cardOptions.constrains.end){
+            this.scroll.force = this.cardOptions.constrains.end;
+        }
 
-        // Constrain scroll
-        if (this.cardGroup.position.x >= this.cardOptions.constrains.start) {
-            this.cardGroup.position.x = this.cardOptions.constrains.start;
-        } 
+        this.position = lerp(this.position, this.scroll.force, this.lerpAmt);
+       console.log(this.position);
 
-        if (this.cardGroup.position.x <= this.cardOptions.constrains.end) {
-            this.cardGroup.position.x = this.cardOptions.constrains.end;
-        } 
+        this.cardGroup.position.x = this.position;
 
         // Determine current card index
         for (let n = 0; n < this.cardOptions.total; n++) {

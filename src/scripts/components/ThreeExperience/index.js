@@ -1,10 +1,6 @@
 // Components(s)
 import ThreeControls from './Controls';
 
-function lerp(a, b, t) {
-    return ((1 - t) * a + t * b);
-    }
-
 // Class - ThreeRenderer - https://threejs.org/docs/#api/en/renderers/WebGLRenderer
 export default class ThreeExperience extends ThreeControls {
     constructor(options, items) {
@@ -13,9 +9,9 @@ export default class ThreeExperience extends ThreeControls {
         this.playing = false;
         this.rafID = null;
 
-        // Speed
-        this.speed = {
-            value: this.wheel.deltaY || 0,
+        // Scroll
+        this.scroll = {
+            force: this.wheel.deltaY || 0,
             scale: .0005,
             friction: .98,
         };
@@ -45,14 +41,14 @@ export default class ThreeExperience extends ThreeControls {
     }
 
     setSpeed() {
-        this.speed.value += (this.wheel.deltaY * this.speed.scale);
+        this.scroll.force += this.wheel.deltaY;
     }
 
     update() {
-        this.speed.value *= this.speed.friction;
+        // this.scroll.force *= this.scroll.friction;
 
         this.updateTime();
-        this.updateMeshes(this.speed.value);
+        this.updateMeshes(this.scroll);
         this.updateControls();
         this.updateRenderer();
         this.rafID = requestAnimationFrame(this.update.bind(this));
