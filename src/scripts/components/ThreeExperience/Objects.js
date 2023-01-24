@@ -62,10 +62,6 @@ export default class ThreeObjects extends ThreeRenderer {
             end: -this.cardOptions.ranges[this.cardOptions.ranges.length - 1].mid
         };
 
-        // Set the cards flush left at {0, 0}
-        // this.cardGroup.position.x = this.cardOptions.width / 2;
-        
-
         // Add to scene
         this.scene.add(this.cardGroup);
     }
