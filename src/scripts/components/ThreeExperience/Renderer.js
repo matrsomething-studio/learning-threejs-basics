@@ -14,6 +14,7 @@ export default class ThreeRenderer extends ThreeCamera {
             antialias: true,
             alpha: true,
         });
+        
         this.renderer.setSize(this.width, this.height);
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         this.renderer.sortObjects = false;

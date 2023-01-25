@@ -33,12 +33,17 @@ export default class ThreeExperience extends ThreeControls {
         }
     }
 
+    setCursor() {
+        this.cursor.x = this.mouse.clientX / this.width - 0.5;
+        this.cursor.y = this.mouse.clientY / this.height - 0.5;
+    }
+
     setScroll() {
-        this.scroll.force -= this.wheel.deltaY * 0.0085;
+        this.scroll -= this.wheel.deltaY * 0.0085;
     }
 
     update() {
-        this.updateTime();
+        this.updateBase();
         this.updateObjects();
         this.updateControls();
         this.updateRenderer();

@@ -8,7 +8,6 @@ import ThreeExperience from './components/ThreeExperience';
 // App - https://prettier.io/
 const App = (() => {
     let JSKnow = null;
-    let DemoModal = null;
     let DemoExp = null;
 
     function bindEvents() {
@@ -18,25 +17,19 @@ const App = (() => {
 
         window.addEventListener('mousemove', (e) => {
             DemoExp.mouse = e;
-            DemoExp.cursor.x = e.clientX / DemoExp.width - 0.5;
-            DemoExp.cursor.y = e.clientY / DemoExp.height - 0.5;
+            DemoExp.setCursor();
         });
 
         window.addEventListener('wheel', (e) => {
             DemoExp.wheel = e;
             DemoExp.setScroll();
         });
-
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-            }
-        });
     }
 
     function init() {
         JSKnow = new KnowJS();
         DemoExp = new ThreeExperience({
-            domSelector: '#scene',
+            domSelector: '#webgl',
             orbitControls: false,
             showGUI: false
         });

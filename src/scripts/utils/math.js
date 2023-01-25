@@ -12,7 +12,6 @@ const randomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1) + 
 
 export {
     lerp,
-    invlerp,
     clamp,
     map,
     randomNumber

@@ -1,17 +1,11 @@
 // Docs - https://threejs.org/ & https://r105.threejsfundamentals.org/
 import * as THREE from 'three';
 
+// Util(s)
+import { lerp } from '../../utils/math';
+
 // Components(s)
 import ThreeRenderer from './Renderer';
-
-function lerp (start, end, amt){
-    return (1 - amt) * start + amt * end;
-}
-
-// Clamp number between two values with the following line:
-function clamp (num, min, max) { 
-    return Math.min(Math.max(num, min), max);
-}
 
 // Class - ThreeObjects - https://threejs.org/docs/
 export default class ThreeObjects extends ThreeRenderer {
@@ -31,9 +25,8 @@ export default class ThreeObjects extends ThreeRenderer {
         };
 
         // Lerp
-        this.position = 0;
+        this.position = 0.0;
         this.lerpAmt = 0.08; // Higher the value = faster
-        this.sized = false;
 
         this.createCards();
     }
@@ -54,7 +47,7 @@ export default class ThreeObjects extends ThreeRenderer {
             // Generate at nth position card width plus gap
             card.position.x = (n) * (this.cardOptions.width + this.cardOptions.gap);
 
-            // Collect care range data
+            // Collect card range data
             this.cardOptions.ranges.push({ 
                 start: (card.position.x - (this.cardOptions.width / 2)) - (this.cardOptions.gap / 2), 
                 mid: card.position.x, 
@@ -74,15 +67,15 @@ export default class ThreeObjects extends ThreeRenderer {
     }
 
     updateObjects() {
-        if (this.scroll.force > this.cardOptions.constrains.start) {
-            this.scroll.force = this.cardOptions.constrains.start;
+        if (this.scroll > this.cardOptions.constrains.start) {
+            this.scroll = this.cardOptions.constrains.start;
         } 
         
-        if ( this.scroll.force < this.cardOptions.constrains.end){
-            this.scroll.force = this.cardOptions.constrains.end;
+        if ( this.scroll < this.cardOptions.constrains.end){
+            this.scroll = this.cardOptions.constrains.end;
         }
         
-        this.position = lerp(this.position, this.scroll.force, this.lerpAmt);
+        this.position = lerp(this.position, this.scroll, this.lerpAmt);
         this.cardGroup.position.x = this.position;
        
         // Determine current card index
@@ -93,6 +86,6 @@ export default class ThreeObjects extends ThreeRenderer {
         }
 
         // Update UI 
-        this.slideIndx.innerHTML = `${this.indx} of ${this.cardOptions.total} `;
+        this.slideIndx.innerHTML = `${this.indx} of ${this.cardOptions.total}`;
     }
 }
