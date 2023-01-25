@@ -9,12 +9,8 @@ export default class ThreeCamera extends ThreeScene {
     constructor(options) {
         super(options);
         this.options = options;
-        this.camera = new THREE.PerspectiveCamera(
-            75,
-            this.width / this.height,
-            0.1,
-            1000
-        );
+       
+        this.camera = new THREE.PerspectiveCamera(75, this.width / this.height);
         this.camera.position.set(0, 0, 4);
         this.camera.lookAt(0, 0, 0);
 
@@ -22,10 +18,8 @@ export default class ThreeCamera extends ThreeScene {
     }
 
     resizeCamera() {
-        if (this.camera) {
-            this.camera.aspect = this.width / this.height;
-            this.camera.updateProjectionMatrix();
-        }
+        this.camera.aspect = this.width / this.height;
+        this.camera.updateProjectionMatrix();
     }
 
     destroyCamera() {

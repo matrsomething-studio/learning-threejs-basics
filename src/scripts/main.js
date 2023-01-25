@@ -8,27 +8,27 @@ import ThreeExperience from './components/ThreeExperience';
 // App - https://prettier.io/
 const App = (() => {
     let JSKnow = null;
-    let DemoExp = null;
+    let CardExp = null;
 
     function bindEvents() {
         window.addEventListener('resize', (e) => {
-            DemoExp.resize();
+            CardExp.resize();
         });
 
         window.addEventListener('mousemove', (e) => {
-            DemoExp.mouse = e;
-            DemoExp.setCursor();
+            CardExp.mouse = e;
+            CardExp.setCursor();
         });
 
         window.addEventListener('wheel', (e) => {
-            DemoExp.wheel = e;
-            DemoExp.setScroll();
+            CardExp.wheel = e;
+            CardExp.setScroll();
         });
     }
 
     function init() {
         JSKnow = new KnowJS();
-        DemoExp = new ThreeExperience({
+        CardExp = new ThreeExperience({
             domSelector: '#webgl',
             orbitControls: false,
             showGUI: false

@@ -3,7 +3,7 @@ import ThreeControls from './Controls';
 
 // Class - ThreeRenderer - https://threejs.org/docs/#api/en/renderers/WebGLRenderer
 export default class ThreeExperience extends ThreeControls {
-    constructor(options, items) {
+    constructor(options, args) {
         super(options);
         this.options = options;
         this.playing = false;

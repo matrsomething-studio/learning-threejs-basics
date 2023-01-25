@@ -82,7 +82,7 @@ export default class ThreeObjects extends ThreeRenderer {
         for (let n = 0; n < this.cardOptions.total; n++) {
             if (this.cardGroup.position.x <= -this.cardOptions.ranges[n].start && this.cardGroup.position.x >= -this.cardOptions.ranges[n].end) {
                 this.indx = n + 1;
-            }
+            }           
         }
 
         // Update UI 
