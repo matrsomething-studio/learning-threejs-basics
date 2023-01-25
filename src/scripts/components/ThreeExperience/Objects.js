@@ -57,7 +57,7 @@ export default class ThreeObjects extends ThreeRenderer {
             this.cardGroup.add(card);
         }
 
-        this.cardOptions.constrains = {
+        this.cardOptions.constraints = {
             start: -this.cardOptions.ranges[0].mid,
             end: -this.cardOptions.ranges[this.cardOptions.ranges.length - 1].mid
         };
@@ -67,12 +67,12 @@ export default class ThreeObjects extends ThreeRenderer {
     }
 
     updateObjects() {
-        if (this.scroll > this.cardOptions.constrains.start) {
-            this.scroll = this.cardOptions.constrains.start;
+        if (this.scroll > this.cardOptions.constraints.start) {
+            this.scroll = this.cardOptions.constraints.start;
         } 
         
-        if ( this.scroll < this.cardOptions.constrains.end){
-            this.scroll = this.cardOptions.constrains.end;
+        if ( this.scroll < this.cardOptions.constraints.end){
+            this.scroll = this.cardOptions.constraints.end;
         }
         
         this.position = lerp(this.position, this.scroll, this.lerpAmt);
