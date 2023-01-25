@@ -8,6 +8,12 @@ function lerp (start, end, amt){
     return (1 - amt) * start + amt * end;
 }
 
+
+// Clamp number between two values with the following line:
+function clamp (num, min, max) { 
+    return Math.min(Math.max(num, min), max);
+}
+
 // Class - ThreeObjects - https://threejs.org/docs/
 export default class ThreeObjects extends ThreeRenderer {
     constructor(options) {
@@ -27,12 +33,13 @@ export default class ThreeObjects extends ThreeRenderer {
 
         // Lerp
         this.position = 0;
-        this.lerpAmt = 0.04;
+        this.lerpAmt = 0.0750; // Higher the value = faster
+        this.sized = false;
 
-        this.setMeshes();
+        this.createCards();
     }
 
-    setMeshes() {
+    createCards() {
         let cardGeo = null
         let card = null;
 
@@ -66,26 +73,41 @@ export default class ThreeObjects extends ThreeRenderer {
         this.scene.add(this.cardGroup);
     }
 
-    updateMeshes(scroll) {  
-        if (this.scroll.force > this.cardOptions.constrains.start) {
-            this.scroll.force = this.cardOptions.constrains.start;
-        } else if ( this.scroll.force <= this.cardOptions.constrains.end){
-            this.scroll.force = this.cardOptions.constrains.end;
+    sizeCards() {
+        for (let n = 0; n < this.cardGroup.children.length; n++)  {
+            if (!this.sized) {
+                this.cardGroup.children[n].scale.x = .25;
+                this.cardGroup.children[n].scale.y = .15;
+                this.cardGroup.children[n].position.x = n * .6;
+            } else {
+                this.cardGroup.children[n].scale.x = 1;
+                this.cardGroup.children[n].scale.y = 1;
+                this.cardGroup.children[n].position.x = (n) * (this.cardOptions.width + this.cardOptions.gap);
+            }
         }
 
-        this.position = lerp(this.position, this.scroll.force, this.lerpAmt);
-       console.log(this.position);
+        this.sized = !this.sized; 
+    }
 
+    updateObjects() {
         this.cardGroup.position.x = this.position;
 
+        if (this.scroll.force > this.cardOptions.constrains.start) {
+            this.scroll.force = this.cardOptions.constrains.start;
+        } else if ( this.scroll.force < this.cardOptions.constrains.end){
+            this.scroll.force = this.cardOptions.constrains.end;
+        }
+        
+        this.position = lerp(this.position, this.scroll.force, this.lerpAmt);
+       
         // Determine current card index
         for (let n = 0; n < this.cardOptions.total; n++) {
             if (this.cardGroup.position.x <= -this.cardOptions.ranges[n].start && this.cardGroup.position.x >= -this.cardOptions.ranges[n].end) {
                 this.indx = n + 1;
-            } 
+            }
         }
 
         // Update UI 
-        this.slideIndx.innerHTML = `${this.cardGroup.position.x.toFixed(2)} <br/> ${this.indx} of ${this.cardOptions.total} ` ;
+        this.slideIndx.innerHTML = `${this.indx} of ${this.cardOptions.total} `;
     }
 }

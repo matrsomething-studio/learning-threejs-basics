@@ -9,13 +9,6 @@ export default class ThreeExperience extends ThreeControls {
         this.playing = false;
         this.rafID = null;
 
-        // Scroll
-        this.scroll = {
-            force: this.wheel.deltaY || 0,
-            scale: .0005,
-            friction: .98,
-        };
-        
         this.resize();
         this.play();
     }
@@ -40,15 +33,13 @@ export default class ThreeExperience extends ThreeControls {
         }
     }
 
-    setSpeed() {
-        this.scroll.force += this.wheel.deltaY;
+    setScroll() {
+        this.scroll.force -= this.wheel.deltaY;
     }
 
     update() {
-        // this.scroll.force *= this.scroll.friction;
-
         this.updateTime();
-        this.updateMeshes(this.scroll);
+        this.updateObjects();
         this.updateControls();
         this.updateRenderer();
         this.rafID = requestAnimationFrame(this.update.bind(this));

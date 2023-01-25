@@ -24,12 +24,13 @@ const App = (() => {
 
         window.addEventListener('wheel', (e) => {
             DemoExp.wheel = e;
-            DemoExp.setSpeed();
+            DemoExp.setScroll();
         });
 
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
-                DemoModal.close();
+                // DemoModal.close();
+                DemoExp.sizeCards();
             }
         });
     }
