@@ -17,18 +17,22 @@
     <meta name="twitter:card" content="summary_large_image">
   </head>
 
-  <body class="page">    
+  <body class="page">       
     <main id="main" role="main">
-      <div></div>
-      <section class="section section-scene">
-        <div id="scene">
-          <div style="position: absolute; width: 100%; text-align: center; bottom: 15%; font-size: 17px;">
-            <p><span id="slide-indx">1</span></p>
-          </div>
-        </div>
-      </section>
+      <nav style="position: absolute; top: 5vh; font-size: 16px; width: 100%; text-align: center;">
+        <a href="#">Work</a>
+        <a href="#">About</a>
+      </nav>
+
+      <nav style="position: absolute; bottom: 5vh; font-size: 16px; width: 100%; text-align: center">
+        <p><span id="slide-indx">1</span></p>
+      </nav>
+
+      <section id="scene"></section>
     </main>
-    <div id="preloader"></div>
+    
+    <aside id="preloader"></aside>
+    
     <script defer type="module" src="./scripts/main.js"></script>
   </body>
 </html>

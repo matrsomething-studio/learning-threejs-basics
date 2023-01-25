@@ -34,7 +34,7 @@ export default class ThreeExperience extends ThreeControls {
     }
 
     setScroll() {
-        this.scroll.force -= this.wheel.deltaY;
+        this.scroll.force -= this.wheel.deltaY * 0.0085;
     }
 
     update() {

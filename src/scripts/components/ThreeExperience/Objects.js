@@ -8,7 +8,6 @@ function lerp (start, end, amt){
     return (1 - amt) * start + amt * end;
 }
 
-
 // Clamp number between two values with the following line:
 function clamp (num, min, max) { 
     return Math.min(Math.max(num, min), max);
@@ -25,15 +24,15 @@ export default class ThreeObjects extends ThreeRenderer {
         this.slideIndx = document.querySelector('#slide-indx');
         this.cardOptions = {
             total: 8,
-            width: 2,
-            height: 3,
+            width: 2.15,
+            height: 3.15,
             gap: .12,
             ranges: []
         };
 
         // Lerp
         this.position = 0;
-        this.lerpAmt = 0.0750; // Higher the value = faster
+        this.lerpAmt = 0.08; // Higher the value = faster
         this.sized = false;
 
         this.createCards();
@@ -49,7 +48,8 @@ export default class ThreeObjects extends ThreeRenderer {
 
         for (let n =  0; n < this.cardOptions.total; n++) {
             cardGeo = new THREE.PlaneGeometry(this.cardOptions.width, this.cardOptions.height, 1, 1);
-            card = new THREE.Mesh(cardGeo);
+            let material = new THREE.MeshBasicMaterial( { color: 0x000000 } );
+            card = new THREE.Mesh(cardGeo, material);
             
             // Generate at nth position card width plus gap
             card.position.x = (n) * (this.cardOptions.width + this.cardOptions.gap);
@@ -73,32 +73,17 @@ export default class ThreeObjects extends ThreeRenderer {
         this.scene.add(this.cardGroup);
     }
 
-    sizeCards() {
-        for (let n = 0; n < this.cardGroup.children.length; n++)  {
-            if (!this.sized) {
-                this.cardGroup.children[n].scale.x = .25;
-                this.cardGroup.children[n].scale.y = .15;
-                this.cardGroup.children[n].position.x = n * .6;
-            } else {
-                this.cardGroup.children[n].scale.x = 1;
-                this.cardGroup.children[n].scale.y = 1;
-                this.cardGroup.children[n].position.x = (n) * (this.cardOptions.width + this.cardOptions.gap);
-            }
-        }
-
-        this.sized = !this.sized; 
-    }
-
     updateObjects() {
-        this.cardGroup.position.x = this.position;
-
         if (this.scroll.force > this.cardOptions.constrains.start) {
             this.scroll.force = this.cardOptions.constrains.start;
-        } else if ( this.scroll.force < this.cardOptions.constrains.end){
+        } 
+        
+        if ( this.scroll.force < this.cardOptions.constrains.end){
             this.scroll.force = this.cardOptions.constrains.end;
         }
         
         this.position = lerp(this.position, this.scroll.force, this.lerpAmt);
+        this.cardGroup.position.x = this.position;
        
         // Determine current card index
         for (let n = 0; n < this.cardOptions.total; n++) {

@@ -29,8 +29,6 @@ const App = (() => {
 
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
-                // DemoModal.close();
-                DemoExp.sizeCards();
             }
         });
     }
