@@ -14,9 +14,10 @@ export default class ThreeObjects extends ThreeRenderer {
         this.options = options;
     
         // Cards
+        this.slideUI = document.querySelector('#slide-indx');
+        this.slideIndx = 0;
         this.cardGroup = new THREE.Group();
-        this.slideIndx = document.querySelector('#slide-indx');
-        this.cardOptions = {
+        this.cards = {
             total: 8,
             width: 2.15,
             height: 3.15,
@@ -35,57 +36,68 @@ export default class ThreeObjects extends ThreeRenderer {
         let cardGeo = null
         let card = null;
 
-        if (this.cardOptions.gap < 0) {
+        if (this.cards.gap < 0) {
             throw('Card gap must be 0 or greater');
         }
 
-        for (let n =  0; n < this.cardOptions.total; n++) {
-            cardGeo = new THREE.PlaneGeometry(this.cardOptions.width, this.cardOptions.height, 1, 1);
-            let material = new THREE.MeshBasicMaterial( { color: 0x000000 } );
+        for (let n =  0; n < this.cards.total; n++) {
+            cardGeo = new THREE.PlaneGeometry(this.cards.width, this.cards.height, 1, 1);
+            let material = new THREE.MeshBasicMaterial( { color: 0x0066EE } );
             card = new THREE.Mesh(cardGeo, material);
             
             // Generate at nth position card width plus gap
-            card.position.x = (n) * (this.cardOptions.width + this.cardOptions.gap);
+            card.position.x = (n) * (this.cards.width + this.cards.gap);
 
             // Collect card range data
-            this.cardOptions.ranges.push({ 
-                start: (card.position.x - (this.cardOptions.width / 2)) - (this.cardOptions.gap / 2), 
+            this.cards.ranges.push({ 
+                start: (card.position.x - (this.cards.width / 2)) - (this.cards.gap / 2), 
                 mid: card.position.x, 
-                end: (card.position.x + (this.cardOptions.width / 2)) + (this.cardOptions.gap / 2)
+                end: (card.position.x + (this.cards.width / 2)) + (this.cards.gap / 2)
             });
             
             this.cardGroup.add(card);
         }
 
-        this.cardOptions.constraints = {
-            start: -this.cardOptions.ranges[0].mid,
-            end: -this.cardOptions.ranges[this.cardOptions.ranges.length - 1].mid
+        // Set slider start/end constraints
+        this.cards.constraints = {
+            start: -this.cards.ranges[0].mid,
+            end: -this.cards.ranges[this.cards.ranges.length - 1].mid
         };
+
+        // Set the cards flush left at {0, 0}
+        // this.cardGroup.position.x = this.cards.width / 2;
 
         // Add to scene
         this.scene.add(this.cardGroup);
     }
 
-    updateObjects() {
-        if (this.scroll > this.cardOptions.constraints.start) {
-            this.scroll = this.cardOptions.constraints.start;
+    updateCards() {
+        // Set slider +/- constraints
+        if (this.scroll > this.cards.constraints.start) {
+            this.scroll = this.cards.constraints.start;
         } 
         
-        if ( this.scroll < this.cardOptions.constraints.end){
-            this.scroll = this.cardOptions.constraints.end;
+        if ( this.scroll < this.cards.constraints.end){
+            this.scroll = this.cards.constraints.end;
         }
         
+        // Create new x movement
         this.position = lerp(this.position, this.scroll, this.lerpAmt);
         this.cardGroup.position.x = this.position;
        
-        // Determine current card index
-        for (let n = 0; n < this.cardOptions.total; n++) {
-            if (this.cardGroup.position.x <= -this.cardOptions.ranges[n].start && this.cardGroup.position.x >= -this.cardOptions.ranges[n].end) {
-                this.indx = n + 1;
-            }           
-        }
+        // Do stuff to all cards
+        this.cardGroup.children.forEach((card, n) => {
+            // Determine current card index
+            if (this.cardGroup.position.x <= -this.cards.ranges[n].start && this.cardGroup.position.x >= -this.cards.ranges[n].end) {
+                this.slideIndx = n + 1;
+            }
+        });
 
         // Update UI 
-        this.slideIndx.innerHTML = `${this.indx} of ${this.cardOptions.total}`;
+        this.slideUI.innerHTML = `${this.slideIndx} of ${this.cards.total}`;
+    }
+
+    updateObjects() {
+        this.updateCards();
     }
 }
