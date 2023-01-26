@@ -16,8 +16,16 @@ const App = (() => {
         });
 
         window.addEventListener('mousemove', (e) => {
-            CardExp.mouse = e;
+            CardExp.mouse.evt = e;
             CardExp.setCursor();
+        });
+        
+        window.addEventListener('mousedown', (e) => {
+            CardExp.mouse.isDown = true;  
+        });
+
+        window.addEventListener('mouseup', (e) => {
+            CardExp.mouse.isDown = false;
         });
 
         window.addEventListener('wheel', (e) => {

@@ -15,6 +15,7 @@ export default class ThreeObjects extends ThreeRenderer {
     
         // Cards
         this.slideUI = document.querySelector('#slide-indx');
+        this.slider = document.querySelector('#slider');
         this.slideIndx = 0;
         this.cardGroup = new THREE.Group();
         this.cards = {
@@ -53,8 +54,7 @@ export default class ThreeObjects extends ThreeRenderer {
                 start: (card.position.x - (this.cards.width / 2)) - (this.cards.gap / 2), 
                 mid: card.position.x, 
                 end: (card.position.x + (this.cards.width / 2)) + (this.cards.gap / 2)
-            });
-            
+            });            
             this.cardGroup.add(card);
         }
 
@@ -63,6 +63,9 @@ export default class ThreeObjects extends ThreeRenderer {
             start: -this.cards.ranges[0].mid,
             end: -this.cards.ranges[this.cards.ranges.length - 1].mid
         };
+
+        this.slider.max = this.cards.constraints.start;
+        this.slider.min = this.cards.constraints.end;
 
         // Set the cards flush left at {0, 0}
         // this.cardGroup.position.x = this.cards.width / 2;
@@ -80,11 +83,18 @@ export default class ThreeObjects extends ThreeRenderer {
         if ( this.scroll < this.cards.constraints.end){
             this.scroll = this.cards.constraints.end;
         }
-        
+
         // Create new x movement
-        this.position = lerp(this.position, this.scroll, this.lerpAmt);
+        if (this.mouse.isDown) {
+            this.position = lerp(this.position, this.slider.value, this.lerpAmt);
+            this.scroll = this.slider.value;
+        } else {
+            this.position = lerp(this.position, this.scroll, this.lerpAmt);
+            this.slider.value = this.position;
+        }
+        
         this.cardGroup.position.x = this.position;
-       
+
         // Do stuff to all cards
         this.cardGroup.children.forEach((card, n) => {
             // Determine current card index

@@ -14,7 +14,10 @@ export default class ThreeBase {
         this.clock = new THREE.Clock();
         this.time = { start: Date.now(), previous: 0, elapsed: 0, delta: 0 };
         
-        this.mouse = null;
+        this.mouse = {
+            evt: null,
+            isDown: false
+        };
         this.wheel = null;
         this.cursor = { x: 0, y: 0 };
         this.scroll = 0;
