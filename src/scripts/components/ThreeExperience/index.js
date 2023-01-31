@@ -39,7 +39,12 @@ export default class ThreeExperience extends ThreeControls {
     }
 
     setScroll() {
-        this.scroll -= this.wheel.deltaY * 0.0085;
+        this.wheel.isActive = true;
+        this.scroll -= this.wheel.evt.deltaY * 0.0085;
+        
+        setTimeout(() => {
+            this.wheel.isActive = false;
+        }, 150);
     }
 
     update() {

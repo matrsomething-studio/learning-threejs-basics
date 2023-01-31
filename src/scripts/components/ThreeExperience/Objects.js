@@ -2,7 +2,7 @@
 import * as THREE from 'three';
 
 // Util(s)
-import { lerp } from '../../utils/math';
+import { lerp, clamp } from '../../utils/math';
 
 // Components(s)
 import ThreeRenderer from './Renderer';
@@ -19,16 +19,16 @@ export default class ThreeObjects extends ThreeRenderer {
         this.slideIndx = 0;
         this.cardGroup = new THREE.Group();
         this.cards = {
-            total: 8,
-            width: 2.15,
-            height: 3.15,
-            gap: .12,
+            total: 20,
+            width: 0.5,
+            height: 1.75,
+            gap: 0.10,
             ranges: []
         };
 
         // Lerp
         this.position = 0.0;
-        this.lerpAmt = 0.08; // Higher the value = faster
+        this.lerpAmt = 0.085; // Higher the value = faster
 
         this.createCards();
     }
@@ -36,6 +36,7 @@ export default class ThreeObjects extends ThreeRenderer {
     createCards() {
         let cardGeo = null
         let card = null;
+        let material = new THREE.MeshBasicMaterial( { color: 0x220022 } );
 
         if (this.cards.gap < 0) {
             throw('Card gap must be 0 or greater');
@@ -43,18 +44,18 @@ export default class ThreeObjects extends ThreeRenderer {
 
         for (let n =  0; n < this.cards.total; n++) {
             cardGeo = new THREE.PlaneGeometry(this.cards.width, this.cards.height, 1, 1);
-            let material = new THREE.MeshBasicMaterial( { color: 0x0066EE } );
             card = new THREE.Mesh(cardGeo, material);
             
-            // Generate at nth position card width plus gap
-            card.position.x = (n) * (this.cards.width + this.cards.gap);
+            // Generate card at nth position using card width plus gap
+            card.position.x = n * (this.cards.width + this.cards.gap);
 
             // Collect card range data
             this.cards.ranges.push({ 
                 start: (card.position.x - (this.cards.width / 2)) - (this.cards.gap / 2), 
                 mid: card.position.x, 
                 end: (card.position.x + (this.cards.width / 2)) + (this.cards.gap / 2)
-            });            
+            });    
+
             this.cardGroup.add(card);
         }
 
@@ -102,7 +103,7 @@ export default class ThreeObjects extends ThreeRenderer {
                 this.slideIndx = n + 1;
             }
         });
-
+      
         // Update UI 
         this.slideUI.innerHTML = `${this.slideIndx} of ${this.cards.total}`;
     }

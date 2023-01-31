@@ -18,7 +18,10 @@ export default class ThreeBase {
             evt: null,
             isDown: false
         };
-        this.wheel = null;
+        this.wheel = {
+            evt: null,
+            isActive: false
+        };
         this.cursor = { x: 0, y: 0 };
         this.scroll = 0;
 
