@@ -32,6 +32,10 @@ const App = (() => {
             ThreeExp.wheel.evt = e;
             ThreeExp.setScroll();  
         });
+
+        window.addEventListener('click', (e) => {
+            ThreeExp.handleObjectsOnClick();  
+        });
     }
 
     function init() {
