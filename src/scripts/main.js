@@ -15,10 +15,15 @@ const App = (() => {
             ThreeExp.resize();
         });
 
-        window.addEventListener('mousemove', (e) => {
+        // window.addEventListener('mousemove', (e) => {
+        //     ThreeExp.mouse.evt = e;
+        //     ThreeExp.setCursor();
+        // });
+
+        window.addEventListener( 'pointermove', (e) => {
             ThreeExp.mouse.evt = e;
             ThreeExp.setCursor();
-        });
+        } );
         
         window.addEventListener('mousedown', (e) => {
             ThreeExp.mouse.isDown = true;  
@@ -37,13 +42,17 @@ const App = (() => {
             e.preventDefault();
             ThreeExp.handleObjectsOnClick();  
         });
+
+        document.addEventListener('click', (e) => {
+            ThreeExp.handleCardsOnClick();
+        });
     }
 
     function init() {
         JSKnow = new KnowJS();
         ThreeExp = new ThreeExperience({
             domSelector: '#webgl',
-            orbitControls: true,
+            orbitControls: false,
             showGUI: false
         });
 

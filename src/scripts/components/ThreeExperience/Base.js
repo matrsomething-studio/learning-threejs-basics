@@ -15,6 +15,7 @@ export default class ThreeBase {
         this.time = { start: Date.now(), previous: 0, elapsed: 0, delta: 0 };
         
         this.mouse = {
+            pointer:  new THREE.Vector2(),
             evt: null,
             isDown: false
         };
@@ -24,6 +25,8 @@ export default class ThreeBase {
         };
         this.cursor = { x: 0, y: 0 };
         this.scroll = 0;
+
+        this.raycaster = new THREE.Raycaster();
 
         this.updateBase();
     }
