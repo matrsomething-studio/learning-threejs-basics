@@ -7,6 +7,10 @@ import { lerp, clamp } from '../../utils/math';
 // Components(s)
 import ThreeRenderer from './Renderer';
 
+// Shaders(s)
+import vertexShader from '../../shaders/floating-image/vertex.glsl';
+import fragmentShader from '../../shaders/floating-image/fragment.glsl';
+
 // Class - ThreeObjects - https://threejs.org/docs/
 export default class ThreeObjects extends ThreeRenderer {
     constructor(options) {
@@ -14,7 +18,7 @@ export default class ThreeObjects extends ThreeRenderer {
         this.options = options;
     
         // Cards
-        this.material = null;
+        this.materials = [];
         this.slideUI = document.querySelector('#slide-indx');
         this.slideIndx = 0;
         this.cardGroup = new THREE.Group();
@@ -43,43 +47,27 @@ export default class ThreeObjects extends ThreeRenderer {
         }
 
         const textureLoader = new THREE.TextureLoader();
-        const texture = textureLoader.load('images/5.jpg');
-        texture.needsUpdate = true;
-        this.material = new THREE.ShaderMaterial({
-            uniforms: {
-              time: { type: "f", value: 0 },
-              scale: { value: new THREE.Vector2(1.0, 1.0) },
-              texture1: { value: texture, type: 't' }
-            },
-            vertexShader: `
-           varying vec2 vUv;
-           uniform float time;
-           float sineSpeed = 1.0;
-           float sineIntensity = 0.05;
-           
-           void main() {
-              vUv = (uv - vec2(0.5)) * (0.8 - 0.02) + vec2(0.5);
-              // vUv = uv;
-              // vUv.y -= sin(time * sineSpeed) * sineIntensity;
-              vUv.x -= sin(time * sineSpeed) * sineIntensity;
-
-              gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-            }
-        `,
-            fragmentShader: `
-              uniform sampler2D texture1;
-              varying vec2 vUv;
-              void main() {
-                gl_FragColor = texture2D(texture1, vUv);
-              }
-            `
-        });
+        let texture = null;
+        let material = null;
         let cardGeo = null
         let card = null;
 
-        for (let n =  0; n < this.cards.total; n++) {
+        for (let n = 0; n < this.cards.total; n++) {
+            texture = textureLoader.load(`images/${n + 1}.jpg`);
+            texture.needsUpdate = true;
+            material = new THREE.ShaderMaterial({
+                uniforms: {
+                  time: { type: 'f', value: 0 },
+                  texture1: { value: texture, type: 't' }
+                },
+                vertexShader: vertexShader,
+                fragmentShader: fragmentShader
+            });
+
+            this.materials.push(material);
+
             cardGeo = new THREE.PlaneGeometry(this.cards.width, this.cards.height, 1, 1);
-            card = new THREE.Mesh(cardGeo, this.material);
+            card = new THREE.Mesh(cardGeo, material);
             
             // Generate card at nth position using card width plus gap
             card.position.x = n * (this.cards.width + this.cards.gap);
@@ -103,7 +91,10 @@ export default class ThreeObjects extends ThreeRenderer {
     }
 
     updateCards() {
-        this.material.uniforms.time.value = this.time.elapsed * 2;
+        // Update material uniforms
+        this.materials.forEach((mat) => {
+            mat.uniforms.time.value = this.time.elapsed * 2;
+        });
 
         // Set cards +/- constraints
         this.scroll = clamp(this.scroll, this.cards.constraints.end, this.cards.constraints.start);
