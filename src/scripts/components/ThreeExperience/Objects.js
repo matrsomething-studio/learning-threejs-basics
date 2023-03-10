@@ -19,8 +19,6 @@ export default class ThreeObjects extends ThreeRenderer {
         // Cards
         this.slideUI = document.querySelector('#slide-indx');
         this.slideIndx = 0;
-        this.materials = [];
-        this.cardGroup = new THREE.Group();
         this.imgScale = 3;
         this.cards = {
             total: 4,
@@ -28,7 +26,9 @@ export default class ThreeObjects extends ThreeRenderer {
             height: 1 * this.imgScale,
             gap: .10,
             ranges: [],
-            constraints: {}
+            constraints: {},
+            group: new THREE.Group(),
+            materials: []
         };
 
         // Lerp
@@ -63,7 +63,7 @@ export default class ThreeObjects extends ThreeRenderer {
                 fragmentShader: fragmentShader
             });
 
-            this.materials.push(material);
+            this.cards.materials.push(material);
 
             // Generate cards
             cardGeo = new THREE.PlaneGeometry(this.cards.width, this.cards.height, 1, 1);
@@ -79,7 +79,8 @@ export default class ThreeObjects extends ThreeRenderer {
                 end: card.position.x + this.cards.width / 2 + this.cards.gap / 2
             });    
 
-            this.cardGroup.add(card);
+            this.cards.group.add(card);
+          
         }
 
         // Set cards start/end constraints
@@ -87,12 +88,12 @@ export default class ThreeObjects extends ThreeRenderer {
         this.cards.constraints.end = -this.cards.ranges[this.cards.ranges.length - 1].mid;
 
         // Add to scene
-        this.scene.add(this.cardGroup);
+        this.scene.add(this.cards.group);
     }
 
     updateCards() {
         // Update material uniforms
-        this.materials.forEach((mat) => {
+        this.cards.materials.forEach((mat) => {
             mat.uniforms.time.value = this.time.elapsed * 2;
         });
 
@@ -101,11 +102,11 @@ export default class ThreeObjects extends ThreeRenderer {
 
         // Set position
         this.position = lerp(this.position, this.scroll, this.lerpAmt);
-        this.cardGroup.position.x = this.position;
+        this.cards.group.position.x = this.position;
 
         // Determine current card index
         this.slideIndx = this.cards.ranges.findIndex((range) => {
-            return this.cardGroup.position.x <= -range.start && this.cardGroup.position.x >= -range.end;
+            return this.cards.group.position.x <= -range.start && this.cards.group.position.x >= -range.end;
         }) + 1;
       
         // Update UI 
