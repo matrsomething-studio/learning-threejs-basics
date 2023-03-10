@@ -35,6 +35,7 @@ export default class ThreeControls extends ThreeObjects {
                 this.renderer.domElement
             );
             this.controls.enableDamping = true;
+            this.controls.enableZoom = false;
         }
     }
 }

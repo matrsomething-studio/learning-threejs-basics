@@ -14,13 +14,14 @@ export default class ThreeObjects extends ThreeRenderer {
         this.options = options;
     
         // Cards
+        this.material = null;
         this.slideUI = document.querySelector('#slide-indx');
         this.slideIndx = 0;
         this.cardGroup = new THREE.Group();
         this.cards = {
-            total: 10,
-            width: 2,
-            height: 3,
+            total: 4,
+            width: 1.6 * 3,
+            height: 1 * 3,
             gap: 0.10,
             ranges: [],
             constraints: {
@@ -41,13 +42,44 @@ export default class ThreeObjects extends ThreeRenderer {
             throw('Card gap must be 0 or greater');
         }
 
+        const textureLoader = new THREE.TextureLoader();
+        const texture = textureLoader.load('images/5.jpg');
+        texture.needsUpdate = true;
+        this.material = new THREE.ShaderMaterial({
+            uniforms: {
+              time: { type: "f", value: 0 },
+              scale: { value: new THREE.Vector2(1.0, 1.0) },
+              texture1: { value: texture, type: 't' }
+            },
+            vertexShader: `
+           varying vec2 vUv;
+           uniform float time;
+           float sineSpeed = 1.0;
+           float sineIntensity = 0.05;
+           
+           void main() {
+              vUv = (uv - vec2(0.5)) * (0.8 - 0.02) + vec2(0.5);
+              // vUv = uv;
+              // vUv.y -= sin(time * sineSpeed) * sineIntensity;
+              vUv.x -= sin(time * sineSpeed) * sineIntensity;
+
+              gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `,
+            fragmentShader: `
+              uniform sampler2D texture1;
+              varying vec2 vUv;
+              void main() {
+                gl_FragColor = texture2D(texture1, vUv);
+              }
+            `
+        });
         let cardGeo = null
         let card = null;
-        let material = new THREE.MeshBasicMaterial( { color: 0x220022 } );
 
         for (let n =  0; n < this.cards.total; n++) {
             cardGeo = new THREE.PlaneGeometry(this.cards.width, this.cards.height, 1, 1);
-            card = new THREE.Mesh(cardGeo, material);
+            card = new THREE.Mesh(cardGeo, this.material);
             
             // Generate card at nth position using card width plus gap
             card.position.x = n * (this.cards.width + this.cards.gap);
@@ -62,7 +94,7 @@ export default class ThreeObjects extends ThreeRenderer {
             this.cardGroup.add(card);
         }
 
-        // Set slider start/end constraints
+        // Set cards start/end constraints
         this.cards.constraints.start = -this.cards.ranges[0].mid;
         this.cards.constraints.end = -this.cards.ranges[this.cards.ranges.length - 1].mid;
 
@@ -71,7 +103,9 @@ export default class ThreeObjects extends ThreeRenderer {
     }
 
     updateCards() {
-        // Set slider +/- constraints
+        this.material.uniforms.time.value = this.time.elapsed * 2;
+
+        // Set cards +/- constraints
         this.scroll = clamp(this.scroll, this.cards.constraints.end, this.cards.constraints.start);
 
         // Set position
