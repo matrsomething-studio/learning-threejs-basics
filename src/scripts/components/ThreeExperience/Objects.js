@@ -53,6 +53,7 @@ export default class ThreeObjects extends ThreeRenderer {
             texture = textureLoader.load(`images/${n + 1}.jpg`);
             texture.needsUpdate = true;
             material = new THREE.ShaderMaterial({
+                side: THREE.DoubleSide,
                 uniforms: {
                   time: { type: 'f', value: 0 },
                   texture1: { value: texture, type: 't' }
