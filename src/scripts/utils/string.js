@@ -1,5 +1,5 @@
 // return string capitalized
-const ALPHA = 'abcdefghijklmnopqrstuvwxyz';
+const Alpha = 'abcdefghijklmnopqrstuvwxyz';
 
 const capitalize = (str) => {
 	return str.charAt(0).toUpperCase() + str.slice(1);
@@ -23,15 +23,15 @@ const replaceAt = (str, index, replacement) => {
 };
 
 // return string with all space(s) at beginning or end of string removed
-const stripLeadingTrailingEmptySpace = (str) => {
+const stripLeadingTrailingSpace = (str) => {
 	return str.replace(/(^\s+|\s+$)/g, '');
 };
 
 export {
-	ALPHA,
+	Alpha,
 	capitalize,
 	titleCase,
 	stripEmptySpace,
 	replaceAt,
-	stripLeadingTrailingEmptySpace
+	stripLeadingTrailingSpace
 };

@@ -2,48 +2,43 @@
 import '../styles/main.scss';
 
 // Components(s)
-import SimpleModal from './components/SimpleModal';
 import KnowJS from './components/KnowJS';
 import ThreeExperience from './components/ThreeExperience';
 
-// App - https://prettier.io/
+// App
 const App = (() => {
     let JSKnow = null;
-    let DemoModal = null;
-    let DemoExp = null;
+    let ThreeExp = null;
 
     function bindEvents() {
         window.addEventListener('resize', (e) => {
-            DemoExp.resize();
+            ThreeExp.resize();
         });
 
         window.addEventListener('mousemove', (e) => {
-            DemoExp.mouse = e;
-            DemoExp.cursor.x = e.clientX / DemoExp.width - 0.5;
-            DemoExp.cursor.y = e.clientY / DemoExp.height - 0.5;
+            ThreeExp.mouse.evt = e;
+            ThreeExp.setCursor();
+        });
+        
+        window.addEventListener('mousedown', (e) => {
+            ThreeExp.mouse.isDown = true;  
+        });
+
+        window.addEventListener('mouseup', (e) => {
+            ThreeExp.mouse.isDown = false;
         });
 
         window.addEventListener('wheel', (e) => {
-            DemoExp.wheel = e;
-            DemoExp.setSpeed();
-        });
-
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                DemoModal.close();
-            }
+            ThreeExp.wheel.evt = e;
+            ThreeExp.setScroll();  
         });
     }
 
     function init() {
         JSKnow = new KnowJS();
-        DemoModal = new SimpleModal({
-            domSelector: 'data-modal="MODAL-ID"',
-            overflowHide: false,
-        });
-        DemoExp = new ThreeExperience({
-            domSelector: '#scene',
-            orbitControls: false,
+        ThreeExp = new ThreeExperience({
+            domSelector: '#webgl',
+            orbitControls: true,
             showGUI: false
         });
 

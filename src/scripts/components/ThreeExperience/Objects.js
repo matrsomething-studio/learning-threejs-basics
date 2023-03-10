@@ -1,107 +1,127 @@
 // Docs - https://threejs.org/ & https://r105.threejsfundamentals.org/
 import * as THREE from 'three';
 
+// Util(s)
+import { lerp, clamp } from '../../utils/math';
+
 // Components(s)
 import ThreeRenderer from './Renderer';
-import ThreeDataGUI from './DataGUI';
 
-// Shader(s)
-import vertexRGB from '../../shaders/rgb/vertex.glsl';
-import fragmentRGB from '../../shaders/rgb/fragment.glsl';
-
-// Class - ThreeObjects - https://threejs.org/docs/?q=Scene#api/en/scenes/Scene
+// Class - ThreeObjects - https://threejs.org/docs/
 export default class ThreeObjects extends ThreeRenderer {
     constructor(options) {
         super(options);
         this.options = options;
-        this.meshes = [];
-        this.meshGroup = new THREE.Group();
-        this.lights = [];
-        this.materials = {};
-        this.slideIndx = document.querySelector('#slide-indx');
-
-        this.setMaterials();
-        this.setMeshes();
-        this.setLights();
-        this.setDataGUI();
-    }
-
-    setDataGUI() {
-        if (this.options.showGUI) {
-            this.gui = new ThreeDataGUI(this);
-        }
-    }
-
-    setMaterials() {
-        this.materials.rgb = new THREE.ShaderMaterial({
-            extensions: {
-                derivatives: '#extension GL_OES_standard_derivatives : enable',
-            },
-            side: THREE.DoubleSide,
-            uniforms: {
-                iTime: { value: 0 },
-                iResolution: { value: new THREE.Vector3() },
-                iMouse: { value: this.mouse },
-            },
-            // wireframe: true,
-            // vertexShader: vertexRGB,
-            transparent: true,
-            fragmentShader: fragmentRGB,
-        });
-    }
-
-    setMeshes() {
-        let planeGeo = null
-        let plane = null;
-
-        for (let i =  1; i <= 3; i++) {
-            planeGeo = new THREE.PlaneGeometry(2, 2.5, 1, 1);
-            plane = new THREE.Mesh(planeGeo, this.materials.rgb);
-            plane.position.x = (i === 1) ? 0 : plane.position.x + (i - 1) * 2.5;     
-            this.meshes.push(plane);
-            this.meshGroup.add(plane);
-        }
-
-        this.scene.add(this.meshGroup);
-    }
-
-    setLights() {
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-        this.scene.add(directionalLight);
-        this.lights.push(directionalLight);
-    }
-
-    updateMaterials() {
-        if (this.materials) {
-            this.materials.rgb.uniforms.iResolution.value.set(this.width, this.height, 1);
-            this.materials.rgb.uniforms.iTime.value = this.time.elapsed;
-        }
-    }
-
-    updateMeshes(speed) {
-        if (this.meshes.length > 0) {
-            let i = .5;
-
-            // (this.meshGroup.children).forEach(el => {
-            //     el.scale.set(Math.abs((1 * speed))  + 1, Math.abs((1.5**i * speed)) + 1, 1);
-            //     i += .5;
-            // });
-   
-            this.meshGroup.position.x -= speed;
-
-            if (this.meshGroup.position.x <= 0 && this.meshGroup.position.x >= -1.25) {
-                this.slideIndx.innerHTML = 1;
-            } else if (this.meshGroup.position.x <= -1.26 && this.meshGroup.position.x >= -3.75) {
-                this.slideIndx.innerHTML = 2;
-            } else if (this.meshGroup.position.x <= -3.76 && this.meshGroup.position.x >= -6.26) {
-                this.slideIndx.innerHTML = 3;
+    
+        // Cards
+        this.material = null;
+        this.slideUI = document.querySelector('#slide-indx');
+        this.slideIndx = 0;
+        this.cardGroup = new THREE.Group();
+        this.cards = {
+            total: 4,
+            width: 1.6 * 3,
+            height: 1 * 3,
+            gap: 0.10,
+            ranges: [],
+            constraints: {
+                start: null,
+                end: null
             }
-        }
+        };
+
+        // Lerp
+        this.position = 0.0;
+        this.lerpAmt = 0.085; // Higher the value = faster
+
+        this.createCards();
     }
 
-    updateLights() {
-        if (this.lights.length > 0) {
-            // Update Lights
+    createCards() {
+        if (this.cards.gap < 0) {
+            throw('Card gap must be 0 or greater');
         }
+
+        const textureLoader = new THREE.TextureLoader();
+        const texture = textureLoader.load('images/5.jpg');
+        texture.needsUpdate = true;
+        this.material = new THREE.ShaderMaterial({
+            uniforms: {
+              time: { type: "f", value: 0 },
+              scale: { value: new THREE.Vector2(1.0, 1.0) },
+              texture1: { value: texture, type: 't' }
+            },
+            vertexShader: `
+           varying vec2 vUv;
+           uniform float time;
+           float sineSpeed = 1.0;
+           float sineIntensity = 0.05;
+           
+           void main() {
+              vUv = (uv - vec2(0.5)) * (0.8 - 0.02) + vec2(0.5);
+              // vUv = uv;
+              // vUv.y -= sin(time * sineSpeed) * sineIntensity;
+              vUv.x -= sin(time * sineSpeed) * sineIntensity;
+
+              gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `,
+            fragmentShader: `
+              uniform sampler2D texture1;
+              varying vec2 vUv;
+              void main() {
+                gl_FragColor = texture2D(texture1, vUv);
+              }
+            `
+        });
+        let cardGeo = null
+        let card = null;
+
+        for (let n =  0; n < this.cards.total; n++) {
+            cardGeo = new THREE.PlaneGeometry(this.cards.width, this.cards.height, 1, 1);
+            card = new THREE.Mesh(cardGeo, this.material);
+            
+            // Generate card at nth position using card width plus gap
+            card.position.x = n * (this.cards.width + this.cards.gap);
+
+            // Collect card range data
+            this.cards.ranges.push({ 
+                start: card.position.x - this.cards.width / 2 - this.cards.gap / 2,
+                mid: card.position.x,
+                end: card.position.x + this.cards.width / 2 + this.cards.gap / 2
+            });    
+
+            this.cardGroup.add(card);
+        }
+
+        // Set cards start/end constraints
+        this.cards.constraints.start = -this.cards.ranges[0].mid;
+        this.cards.constraints.end = -this.cards.ranges[this.cards.ranges.length - 1].mid;
+
+        // Add to scene
+        this.scene.add(this.cardGroup);
+    }
+
+    updateCards() {
+        this.material.uniforms.time.value = this.time.elapsed * 2;
+
+        // Set cards +/- constraints
+        this.scroll = clamp(this.scroll, this.cards.constraints.end, this.cards.constraints.start);
+
+        // Set position
+        this.position = lerp(this.position, this.scroll, this.lerpAmt);
+        this.cardGroup.position.x = this.position;
+
+        // Determine current card index
+        this.slideIndx = this.cards.ranges.findIndex((range) => {
+            return this.cardGroup.position.x <= -range.start && this.cardGroup.position.x >= -range.end;
+        }) + 1;
+      
+        // Update UI 
+        this.slideUI.innerHTML = `${this.slideIndx} of ${this.cards.total}`;
+    }
+
+    updateObjects() {
+        this.updateCards();
     }
 }

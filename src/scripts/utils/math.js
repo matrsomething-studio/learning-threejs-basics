@@ -1,5 +1,5 @@
 // Linear interpolation
-const lerp = (a, b, n) => (1 - n) * a + n * b;
+const lerp = (start, end, amt) => (1 - amt) * start + amt * end;
 
 // Restrict a value to a given range
 const clamp = (num, min, max) => num <= min ? min : num >= max ? max : num;

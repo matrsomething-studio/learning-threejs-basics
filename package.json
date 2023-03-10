@@ -13,15 +13,14 @@
     "com-check": "git add . && git commit -m 'dev: checkpoint' && git push"
   },
   "devDependencies": {
+    "dat.gui": "^0.7.9",
+    "lil-gui": "^0.17.0",
     "sass": "^1.57.1",
     "vite": "^4.0.0",
-    "vite-plugin-glsl": "^1.0.2",
-    "dat.gui": "^0.7.9",
-    "lil-gui": "^0.17.0"
+    "vite-plugin-glsl": "^1.0.2"
   },
   "dependencies": {
     "bootstrap": "^5.2.3",
-    "gsap": "^3.11.4",
     "stats.js": "^0.17.0",
     "three": "^0.148.0"
   }

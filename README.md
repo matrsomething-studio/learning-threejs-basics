@@ -1,5 +1,5 @@
-# Learning: Scrollable Text Gallery with WebGL and Three.js
-Steps and sandbox for learning Scrollable Text Gallery with WebGL and Three.js by Yuri Artiukh [YouTube Video](https://www.youtube.com/watch?v=qQQjPoP01bg) 
+# Learning: Base scaffold for learning Three.js practices
+Base scaffold for learning Three.js practices
 
 ## Dependencies
 - See [package.json](https://github.com/matrsomething-studio/learning-scrollable-text-galley/blob/main/package.json)

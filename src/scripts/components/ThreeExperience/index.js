@@ -1,23 +1,14 @@
 // Components(s)
 import ThreeControls from './Controls';
 
-// GSAP - https://greensock.com/docs/v3/GSAP/Timeline
-import { gsap, Quad } from 'gsap';
-
 // Class - ThreeRenderer - https://threejs.org/docs/#api/en/renderers/WebGLRenderer
 export default class ThreeExperience extends ThreeControls {
-    constructor(options, items) {
+    constructor(options, args) {
         super(options);
         this.options = options;
-        this.tl = gsap.timeline();
         this.playing = false;
         this.rafID = null;
-        this.speed = {
-            value: this.wheel.deltaY || 0,
-            scale: .00095,
-            friction: 0.75,
-        };
-        this.pos = 0;
+
         this.resize();
         this.play();
     }
@@ -26,14 +17,6 @@ export default class ThreeExperience extends ThreeControls {
         this.resizeWindow();
         this.resizeCamera();
         this.resizeRenderer();
-    }
-
-    setSpeed() {
-        this.speed.value += (this.wheel.deltaY * this.speed.scale);
-    }
-
-    lerp(a, b, t) {
-        return ((1 - t) * a + t * b);
     }
 
     play() {
@@ -50,15 +33,24 @@ export default class ThreeExperience extends ThreeControls {
         }
     }
 
-    update() {
-        this.speed.value *= this.speed.friction;
-        this.pos = this.lerp(this.pos, this.speed.value, .08);
+    setCursor() {
+        this.cursor.x = this.mouse.evt.clientX / this.width - 0.5;
+        this.cursor.y = this.mouse.evt.clientY / this.height - 0.5;
+    }
 
-        this.updateTime();
-        this.updateMaterials();
-        this.updateMeshes(this.pos);
-        // this.updateLights();
-        // this.updateControls();
+    setScroll() {
+        this.wheel.isActive = true;
+        this.scroll -= this.wheel.evt.deltaY * 0.0085;
+        
+        setTimeout(() => {
+            this.wheel.isActive = false;
+        }, 150);
+    }
+
+    update() {
+        this.updateBase();
+        this.updateObjects();
+        this.updateControls();
         this.updateRenderer();
         this.rafID = requestAnimationFrame(this.update.bind(this));
     }

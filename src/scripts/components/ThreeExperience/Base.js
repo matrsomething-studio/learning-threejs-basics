@@ -5,17 +5,27 @@ import * as THREE from 'three';
 export default class ThreeBase {
     constructor(options) {
         this.options = options;
+
         this.container = document.querySelector(this.options.domSelector);
         this.width = window.innerWidth;
         this.height = window.innerHeight;
         this.imageAspect = this.options.imageAspect || 1080 / 1920;
+        
         this.clock = new THREE.Clock();
         this.time = { start: Date.now(), previous: 0, elapsed: 0, delta: 0 };
-        this.mouse = null;
+        
+        this.mouse = {
+            evt: null,
+            isDown: false
+        };
+        this.wheel = {
+            evt: null,
+            isActive: false
+        };
         this.cursor = { x: 0, y: 0 };
-        this.wheel = 0;
+        this.scroll = 0;
 
-        this.updateTime();
+        this.updateBase();
     }
 
     resizeWindow() {
@@ -23,11 +33,9 @@ export default class ThreeBase {
         this.height = window.innerHeight;
     }
 
-    updateTime() {
-        if (this.time) {
-            this.time.elapsed = this.clock.getElapsedTime();
-            this.time.delta = this.time.elapsed - this.time.previous;
-            this.time.previous = this.time.elapsed;
-        }
+    updateBase() {
+        this.time.elapsed = this.clock.getElapsedTime();
+        this.time.delta = this.time.elapsed - this.time.previous;
+        this.time.previous = this.time.elapsed;
     }
 }
