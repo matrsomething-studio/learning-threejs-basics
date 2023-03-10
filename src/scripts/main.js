@@ -32,6 +32,11 @@ const App = (() => {
             ThreeExp.wheel.evt = e;
             ThreeExp.setScroll();  
         });
+
+        document.querySelector('[data-btn="zoom"]').addEventListener('click', (e) => {
+            e.preventDefault();
+            ThreeExp.handleObjectsOnClick();  
+        });
     }
 
     function init() {

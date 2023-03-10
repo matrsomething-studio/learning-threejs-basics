@@ -2,6 +2,7 @@
 
 uniform sampler2D texture1;
 varying vec2 vUv;
+uniform float opacity;
 
 /*
 This is a simple fragment shader that samples a 2D texture 
@@ -21,5 +22,6 @@ Finally, the output fragment color is set to the sampled color using
 the gl_FragColor built-in variable.
 */
 void main() {
-    gl_FragColor = texture2D(texture1, vUv);
+    vec4 texelColor = texture2D(texture1, vUv);
+    gl_FragColor = vec4(texelColor.rgb, opacity);
 }

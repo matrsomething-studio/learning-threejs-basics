@@ -15,6 +15,9 @@ import fragmentShader from '../../shaders/floating-image/fragment.glsl';
 export default class ThreeObjects extends ThreeRenderer {
     constructor(options) {
         super(options);
+
+        // States
+        this.isMoved = false;
     
         // Cards
         this.slideUI = document.querySelector('#slide-indx');
@@ -55,9 +58,11 @@ export default class ThreeObjects extends ThreeRenderer {
             texture.needsUpdate = true;
             material = new THREE.ShaderMaterial({
                 side: THREE.DoubleSide,
+                transparent: true,
                 uniforms: {
                   time: { type: 'f', value: 0.0 },
-                  texture1: { type: 't', value: texture }
+                  texture1: { type: 't', value: texture },
+                  opacity: { type: 't', value: 1.0 }
                 },
                 vertexShader: vertexShader,
                 fragmentShader: fragmentShader
@@ -115,5 +120,30 @@ export default class ThreeObjects extends ThreeRenderer {
 
     updateObjects() {
         this.updateCards();
+    }
+
+    // Event Handlers
+    handleObjectsOnClick() {
+        const tl = gsap.timeline({ repeat: 0 });
+        let dy = (this.isMoved) ? 0 : 15;
+        let da = (this.isMoved) ? 1 : 0;
+        let time = 0.55;
+
+        this.cards.group.children.forEach((card, indx) => {
+            tl.to(card.position, {
+                y: (indx % 2 === 0) ? dy : -dy,
+                duration: time,
+                ease: 'expo.inOut',
+            }, `-=${time}`);
+
+            tl.to(card.material.uniforms.opacity, { 
+                value: da, 
+                duration: .25 
+            }, `-=${time}`);
+        });
+
+        this.isMoved = !this.isMoved;
+
+        tl.play(0);
     }
 }
