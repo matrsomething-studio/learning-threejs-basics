@@ -21,11 +21,12 @@ export default class ThreeObjects extends ThreeRenderer {
         this.slideIndx = 0;
         this.materials = [];
         this.cardGroup = new THREE.Group();
+        this.imgScale = 3;
         this.cards = {
             total: 4,
-            width: 1.5 * 3, // Image ratios are w / h
-            height: 1 * 3,
-            gap: 0.10,
+            width: 1.5 * this.imgScale, // Image ratio is w / h
+            height: 1 * this.imgScale,
+            gap: .10,
             ranges: [],
             constraints: {}
         };
@@ -55,8 +56,8 @@ export default class ThreeObjects extends ThreeRenderer {
             material = new THREE.ShaderMaterial({
                 side: THREE.DoubleSide,
                 uniforms: {
-                  time: { type: 'f', value: 0 },
-                  texture1: { value: texture, type: 't' }
+                  time: { type: 'f', value: 0.0 },
+                  texture1: { type: 't', value: texture }
                 },
                 vertexShader: vertexShader,
                 fragmentShader: fragmentShader
