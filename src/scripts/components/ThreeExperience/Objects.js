@@ -19,11 +19,15 @@ export default class ThreeObjects extends ThreeRenderer {
         this.slideIndx = 0;
         this.cardGroup = new THREE.Group();
         this.cards = {
-            total: 20,
-            width: 0.5,
-            height: 1.75,
+            total: 10,
+            width: 2,
+            height: 3,
             gap: 0.10,
-            ranges: []
+            ranges: [],
+            constraints: {
+                start: null,
+                end: null
+            }
         };
 
         // Lerp
@@ -51,22 +55,18 @@ export default class ThreeObjects extends ThreeRenderer {
 
             // Collect card range data
             this.cards.ranges.push({ 
-                start: (card.position.x - (this.cards.width / 2)) - (this.cards.gap / 2), 
-                mid: card.position.x, 
-                end: (card.position.x + (this.cards.width / 2)) + (this.cards.gap / 2)
+                start: card.position.x - this.cards.width / 2 - this.cards.gap / 2,
+                mid: card.position.x,
+                end: card.position.x + this.cards.width / 2 + this.cards.gap / 2
             });    
 
             this.cardGroup.add(card);
         }
 
         // Set slider start/end constraints
-        this.cards.constraints = {
-            start: -this.cards.ranges[0].mid,
-            end: -this.cards.ranges[this.cards.ranges.length - 1].mid
-        };
+        this.cards.constraints.start = -this.cards.ranges[0].mid;
+        this.cards.constraints.end = -this.cards.ranges[this.cards.ranges.length - 1].mid;
 
-        this.slider.max = this.cards.constraints.start;
-        this.slider.min = this.cards.constraints.end;
 
         // Set the cards flush left at {0, 0}
         // this.cardGroup.position.x = this.cards.width / 2;
@@ -77,32 +77,21 @@ export default class ThreeObjects extends ThreeRenderer {
 
     updateCards() {
         // Set slider +/- constraints
-        if (this.scroll > this.cards.constraints.start) {
-            this.scroll = this.cards.constraints.start;
-        } 
-        
-        if ( this.scroll < this.cards.constraints.end){
-            this.scroll = this.cards.constraints.end;
-        }
-
+        this.scroll = clamp(this.scroll, this.cards.constraints.end, this.cards.constraints.start);
+       
         // Create new x movement
         if (this.mouse.isDown) {
             this.position = lerp(this.position, this.slider.value, this.lerpAmt);
-            this.scroll = this.slider.value;
         } else {
             this.position = lerp(this.position, this.scroll, this.lerpAmt);
-            this.slider.value = this.position;
         }
         
         this.cardGroup.position.x = this.position;
 
-        // Do stuff to all cards
-        this.cardGroup.children.forEach((card, n) => {
-            // Determine current card index
-            if (this.cardGroup.position.x <= -this.cards.ranges[n].start && this.cardGroup.position.x >= -this.cards.ranges[n].end) {
-                this.slideIndx = n + 1;
-            }
-        });
+        // Determine current card index
+        this.slideIndx = this.cards.ranges.findIndex((range) => {
+            return this.cardGroup.position.x <= -range.start && this.cardGroup.position.x >= -range.end;
+        }) + 1;
       
         // Update UI 
         this.slideUI.innerHTML = `${this.slideIndx} of ${this.cards.total}`;
