@@ -5,7 +5,7 @@ import '../styles/main.scss';
 import KnowJS from './components/KnowJS';
 import ThreeExperience from './components/ThreeExperience';
 
-// App - https://prettier.io/
+// App
 const App = (() => {
     let JSKnow = null;
     let ThreeExp = null;
