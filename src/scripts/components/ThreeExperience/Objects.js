@@ -15,23 +15,19 @@ import fragmentShader from '../../shaders/floating-image/fragment.glsl';
 export default class ThreeObjects extends ThreeRenderer {
     constructor(options) {
         super(options);
-        this.options = options;
     
         // Cards
-        this.materials = [];
         this.slideUI = document.querySelector('#slide-indx');
         this.slideIndx = 0;
+        this.materials = [];
         this.cardGroup = new THREE.Group();
         this.cards = {
             total: 4,
-            width: 1.6 * 3,
+            width: 1.5 * 3, // Image ratios are w / h
             height: 1 * 3,
             gap: 0.10,
             ranges: [],
-            constraints: {
-                start: null,
-                end: null
-            }
+            constraints: {}
         };
 
         // Lerp
@@ -53,6 +49,7 @@ export default class ThreeObjects extends ThreeRenderer {
         let card = null;
 
         for (let n = 0; n < this.cards.total; n++) {
+            // Load texture and create materials
             texture = textureLoader.load(`images/${n + 1}.jpg`);
             texture.needsUpdate = true;
             material = new THREE.ShaderMaterial({
@@ -66,10 +63,11 @@ export default class ThreeObjects extends ThreeRenderer {
 
             this.materials.push(material);
 
+            // Generate cards
             cardGeo = new THREE.PlaneGeometry(this.cards.width, this.cards.height, 1, 1);
             card = new THREE.Mesh(cardGeo, material);
             
-            // Generate card at nth position using card width plus gap
+            // Place card at nth position using card width plus gap
             card.position.x = n * (this.cards.width + this.cards.gap);
 
             // Collect card range data
