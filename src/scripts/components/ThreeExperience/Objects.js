@@ -15,7 +15,6 @@ export default class ThreeObjects extends ThreeRenderer {
     
         // Cards
         this.slideUI = document.querySelector('#slide-indx');
-        this.slider = document.querySelector('#slider');
         this.slideIndx = 0;
         this.cardGroup = new THREE.Group();
         this.cards = {
@@ -38,13 +37,13 @@ export default class ThreeObjects extends ThreeRenderer {
     }
 
     createCards() {
-        let cardGeo = null
-        let card = null;
-        let material = new THREE.MeshBasicMaterial( { color: 0x220022 } );
-
         if (this.cards.gap < 0) {
             throw('Card gap must be 0 or greater');
         }
+
+        let cardGeo = null
+        let card = null;
+        let material = new THREE.MeshBasicMaterial( { color: 0x220022 } );
 
         for (let n =  0; n < this.cards.total; n++) {
             cardGeo = new THREE.PlaneGeometry(this.cards.width, this.cards.height, 1, 1);
@@ -67,10 +66,6 @@ export default class ThreeObjects extends ThreeRenderer {
         this.cards.constraints.start = -this.cards.ranges[0].mid;
         this.cards.constraints.end = -this.cards.ranges[this.cards.ranges.length - 1].mid;
 
-
-        // Set the cards flush left at {0, 0}
-        // this.cardGroup.position.x = this.cards.width / 2;
-
         // Add to scene
         this.scene.add(this.cardGroup);
     }
@@ -78,14 +73,9 @@ export default class ThreeObjects extends ThreeRenderer {
     updateCards() {
         // Set slider +/- constraints
         this.scroll = clamp(this.scroll, this.cards.constraints.end, this.cards.constraints.start);
-       
-        // Create new x movement
-        if (this.mouse.isDown) {
-            this.position = lerp(this.position, this.slider.value, this.lerpAmt);
-        } else {
-            this.position = lerp(this.position, this.scroll, this.lerpAmt);
-        }
-        
+
+        // Set position
+        this.position = lerp(this.position, this.scroll, this.lerpAmt);
         this.cardGroup.position.x = this.position;
 
         // Determine current card index
