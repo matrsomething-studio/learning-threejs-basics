@@ -36,6 +36,9 @@ export default class ThreeExperience extends ThreeControls {
     setCursor() {
         this.cursor.x = this.mouse.evt.clientX / this.width - 0.5;
         this.cursor.y = this.mouse.evt.clientY / this.height - 0.5;
+
+        this.mouse.pointer.x = this.cursor.x;
+        this.mouse.pointer.y = this.cursor.y;
     }
 
     setScroll() {
