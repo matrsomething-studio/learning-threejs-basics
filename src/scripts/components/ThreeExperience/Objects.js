@@ -123,12 +123,11 @@ export default class ThreeObjects extends ThreeRenderer {
     // Event Handlers
     handleObjectsOnClick() {
         const tl = gsap.timeline({ repeat: 0 });
+        let dy = (this.isMoved) ? 0 : 15;
+        let time = 0.55;
 
         this.cards.group.children.forEach((card, indx) => {
-            let dy = (this.isMoved) ? 0 : 15;
-            let time = 0.55;
             tl.to(card.position, {
-                // y: (indx % 2 === 0) ? dy : -dy,
                 z: (indx % 2 === 0) ? dy : -dy,
                 duration: time,
                 ease: 'expo.inOut',

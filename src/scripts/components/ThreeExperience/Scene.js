@@ -18,7 +18,7 @@ export default class ThreeScene extends ThreeBase {
 
         // Addon(s)
         // this.scene.fog = new THREE.Fog(0x191919, 1.0, 10.0);
-        this.scene.add(new THREE.AxesHelper(2));
+        // this.scene.add(new THREE.AxesHelper(2));
     }
 
     destroyScene() {

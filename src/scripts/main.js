@@ -33,7 +33,8 @@ const App = (() => {
             ThreeExp.setScroll();  
         });
 
-        window.addEventListener('click', (e) => {
+        document.querySelector('[data-btn="zoom"]').addEventListener('click', (e) => {
+            e.preventDefault();
             ThreeExp.handleObjectsOnClick();  
         });
     }
