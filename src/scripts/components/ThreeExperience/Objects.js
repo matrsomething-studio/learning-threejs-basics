@@ -15,23 +15,20 @@ import fragmentShader from '../../shaders/floating-image/fragment.glsl';
 export default class ThreeObjects extends ThreeRenderer {
     constructor(options) {
         super(options);
-        this.options = options;
     
         // Cards
-        this.materials = [];
         this.slideUI = document.querySelector('#slide-indx');
         this.slideIndx = 0;
-        this.cardGroup = new THREE.Group();
+        this.imgScale = 3;
         this.cards = {
             total: 4,
-            width: 1.6 * 3,
-            height: 1 * 3,
-            gap: 0.10,
+            width: 1.5 * this.imgScale, // Image ratio is w / h
+            height: 1 * this.imgScale,
+            gap: .10,
             ranges: [],
-            constraints: {
-                start: null,
-                end: null
-            }
+            constraints: {},
+            group: new THREE.Group(),
+            materials: []
         };
 
         // Lerp
@@ -53,23 +50,26 @@ export default class ThreeObjects extends ThreeRenderer {
         let card = null;
 
         for (let n = 0; n < this.cards.total; n++) {
+            // Load texture and create materials
             texture = textureLoader.load(`images/${n + 1}.jpg`);
             texture.needsUpdate = true;
             material = new THREE.ShaderMaterial({
+                side: THREE.DoubleSide,
                 uniforms: {
-                  time: { type: 'f', value: 0 },
-                  texture1: { value: texture, type: 't' }
+                  time: { type: 'f', value: 0.0 },
+                  texture1: { type: 't', value: texture }
                 },
                 vertexShader: vertexShader,
                 fragmentShader: fragmentShader
             });
 
-            this.materials.push(material);
+            this.cards.materials.push(material);
 
+            // Generate cards
             cardGeo = new THREE.PlaneGeometry(this.cards.width, this.cards.height, 1, 1);
             card = new THREE.Mesh(cardGeo, material);
             
-            // Generate card at nth position using card width plus gap
+            // Place card at nth position using card width plus gap
             card.position.x = n * (this.cards.width + this.cards.gap);
 
             // Collect card range data
@@ -79,7 +79,8 @@ export default class ThreeObjects extends ThreeRenderer {
                 end: card.position.x + this.cards.width / 2 + this.cards.gap / 2
             });    
 
-            this.cardGroup.add(card);
+            this.cards.group.add(card);
+          
         }
 
         // Set cards start/end constraints
@@ -87,12 +88,12 @@ export default class ThreeObjects extends ThreeRenderer {
         this.cards.constraints.end = -this.cards.ranges[this.cards.ranges.length - 1].mid;
 
         // Add to scene
-        this.scene.add(this.cardGroup);
+        this.scene.add(this.cards.group);
     }
 
     updateCards() {
         // Update material uniforms
-        this.materials.forEach((mat) => {
+        this.cards.materials.forEach((mat) => {
             mat.uniforms.time.value = this.time.elapsed * 2;
         });
 
@@ -101,11 +102,11 @@ export default class ThreeObjects extends ThreeRenderer {
 
         // Set position
         this.position = lerp(this.position, this.scroll, this.lerpAmt);
-        this.cardGroup.position.x = this.position;
+        this.cards.group.position.x = this.position;
 
         // Determine current card index
         this.slideIndx = this.cards.ranges.findIndex((range) => {
-            return this.cardGroup.position.x <= -range.start && this.cardGroup.position.x >= -range.end;
+            return this.cards.group.position.x <= -range.start && this.cards.group.position.x >= -range.end;
         }) + 1;
       
         // Update UI 
