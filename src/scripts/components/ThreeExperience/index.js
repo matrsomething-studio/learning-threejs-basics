@@ -37,8 +37,9 @@ export default class ThreeExperience extends ThreeControls {
         this.cursor.x = this.mouse.evt.clientX / this.width - 0.5;
         this.cursor.y = this.mouse.evt.clientY / this.height - 0.5;
 
-        this.mouse.pointer.x = this.cursor.x;
-        this.mouse.pointer.y = this.cursor.y;
+        // For raycasting
+        this.mouse.pointer.x = this.mouse.evt.clientX / this.width * 2 - 1
+        this.mouse.pointer.y = - (this.mouse.evt.clientY / this.height) * 2 + 1
     }
 
     setScroll() {

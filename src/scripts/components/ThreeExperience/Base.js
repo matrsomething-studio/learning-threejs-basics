@@ -26,8 +26,6 @@ export default class ThreeBase {
         this.cursor = { x: 0, y: 0 };
         this.scroll = 0;
 
-        this.raycaster = new THREE.Raycaster();
-
         this.updateBase();
     }
 
