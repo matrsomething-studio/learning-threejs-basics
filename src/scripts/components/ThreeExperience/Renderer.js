@@ -13,6 +13,7 @@ export default class ThreeRenderer extends ThreeCamera {
         this.renderer = new THREE.WebGLRenderer({
             antialias: true,
             alpha: true,
+            powerPreference: 'high-performance'
         });
         
         this.renderer.setSize(this.width, this.height);
