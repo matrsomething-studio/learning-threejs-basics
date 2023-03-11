@@ -14,6 +14,11 @@ export default class ThreeCamera extends ThreeScene {
         this.camera.position.set(0, 0, 4);
         this.camera.lookAt(0, 0, 0);
 
+        this.raycaster = new THREE.Raycaster();
+        this.rayOrigin = new THREE.Vector3(-this.camera.position.z, 0, 0);
+        this.rayDirection = new THREE.Vector3(10, 0, 0);
+        this.rayDirection.normalize();
+
         this.resizeCamera();
     }
 
