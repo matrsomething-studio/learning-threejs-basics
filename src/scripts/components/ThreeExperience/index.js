@@ -9,6 +9,13 @@ export default class ThreeExperience extends ThreeControls {
         this.playing = false;
         this.rafID = null;
 
+         // Speed
+         this.speed = {
+            value: this.wheel.deltaY || 0,
+            scale: .0004,
+            friction: .9,
+        };
+
         this.resize();
         this.play();
     }
@@ -33,6 +40,11 @@ export default class ThreeExperience extends ThreeControls {
         }
     }
 
+    setSpeed() {
+        this.speed.value += (this.wheel.evt.deltaY * this.speed.scale);
+        console.log(this.speed);
+    }
+
     setCursor() {
         this.cursor.x = this.mouse.evt.clientX / this.width - 0.5;
         this.cursor.y = this.mouse.evt.clientY / this.height - 0.5;
@@ -52,8 +64,9 @@ export default class ThreeExperience extends ThreeControls {
     }
 
     update() {
+        this.speed.value *= this.speed.friction;
         this.updateBase();
-        this.updateObjects();
+        this.updateObjects(this.speed.value);
         this.updateControls();
         this.updateRenderer();
         this.rafID = requestAnimationFrame(this.update.bind(this));

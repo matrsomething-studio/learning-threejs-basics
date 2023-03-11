@@ -1,27 +1,54 @@
 #include <common>
 
-uniform sampler2D texture1;
-varying vec2 vUv;
-uniform float opacity;
+// uniform sampler2D texture1;
+// varying vec2 vUv;
+// uniform float opacity;
 
-/*
-This is a simple fragment shader that samples a 2D texture 
-and assigns the sampled color to the output fragment color.
+// /*
+// This is a simple fragment shader that samples a 2D texture 
+// and assigns the sampled color to the output fragment color.
 
-The input texture is specified as a uniform variable of type 
-sampler2D, which is a special type for referencing 2D textures. 
-The texture1 uniform is expected to be set to the appropriate 
-texture object before rendering.
+// The input texture is specified as a uniform variable of type 
+// sampler2D, which is a special type for referencing 2D textures. 
+// The texture1 uniform is expected to be set to the appropriate 
+// texture object before rendering.
 
-The vUv varying variable contains the texture coordinates of 
-the current fragment, which are interpolated from the vertex shader. 
-The texture2D function is used to sample the texture at the specified 
-coordinates and return the sampled color.
+// The vUv varying variable contains the texture coordinates of 
+// the current fragment, which are interpolated from the vertex shader. 
+// The texture2D function is used to sample the texture at the specified 
+// coordinates and return the sampled color.
 
-Finally, the output fragment color is set to the sampled color using 
-the gl_FragColor built-in variable.
-*/
+// Finally, the output fragment color is set to the sampled color using 
+// the gl_FragColor built-in variable.
+// */
+// void main() {
+//     vec4 texelColor = texture2D(texture1, vUv);
+//     gl_FragColor = vec4(texelColor.rgb, opacity);
+// }
+
+
+// uniform sampler2D uTexture;
+// uniform float uAlpha;
+// uniform vec2 uOffset;
+// varying vec2 vUv;
+
+// void main(){
+//     gl_FragColor = vec4(255.,255.,255.,255.);
+// }
+
+
+ uniform sampler2D texture1;
+ uniform float opacity;
+ uniform vec2 uOffset;
+ varying vec2 vUv;
+
+vec3 rgbShift(sampler2D textureImage, vec2 uv, vec2 offset) {
+   float r = texture2D(textureImage,uv + offset).r;
+   vec2 gb = texture2D(textureImage,uv).gb;
+   return vec3(r,gb);
+ }
+
 void main() {
-    vec4 texelColor = texture2D(texture1, vUv);
-    gl_FragColor = vec4(texelColor.rgb, opacity);
-}
+   vec3 color = rgbShift(texture1,vUv,uOffset);
+   gl_FragColor = vec4(color,opacity);
+ }

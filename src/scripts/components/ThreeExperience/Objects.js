@@ -18,6 +18,7 @@ export default class ThreeObjects extends ThreeRenderer {
 
         // States
         this.isMoved = false;
+        this.s = 0;
     
         // Cards
         this.slideUI = document.querySelector('#slide-indx');
@@ -62,7 +63,11 @@ export default class ThreeObjects extends ThreeRenderer {
                 uniforms: {
                   time: { type: 'f', value: 0.0 },
                   texture1: { type: 't', value: texture },
-                  opacity: { type: 't', value: 1.0 }
+                  opacity: { type: 't', value: 1.0 },
+                  uOffset: {
+                    //distortion strength
+                    value: new THREE.Vector2(0.0, 0.0)
+                  },
                 },
                 vertexShader: vertexShader,
                 fragmentShader: fragmentShader
@@ -98,8 +103,9 @@ export default class ThreeObjects extends ThreeRenderer {
 
     updateCards() {
         // Update material uniforms
-        this.cards.materials.forEach((mat) => {
+        this.cards.materials.forEach((mat, index) => {
             mat.uniforms.time.value = this.time.elapsed * 2;
+            mat.uniforms.uOffset.value.set(this.s * .5, this.s * .25)
         });
 
         // Set cards +/- constraints
@@ -118,7 +124,8 @@ export default class ThreeObjects extends ThreeRenderer {
         this.slideUI.innerHTML = `${this.slideIndx} of ${this.cards.total}`;
     }
 
-    updateObjects() {
+    updateObjects(speed) {
+        this.s = speed;
         this.updateCards();
     }
 }

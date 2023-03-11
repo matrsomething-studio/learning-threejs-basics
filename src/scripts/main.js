@@ -36,6 +36,7 @@ const App = (() => {
         window.addEventListener('wheel', (e) => {
             ThreeExp.wheel.evt = e;
             ThreeExp.setScroll();  
+            ThreeExp.setSpeed();
         });
 
         document.querySelector('[data-btn="zoom"]').addEventListener('click', (e) => {
