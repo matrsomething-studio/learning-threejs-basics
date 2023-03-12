@@ -23,6 +23,8 @@ float sineIntensity = 0.025;
 
 uniform sampler2D texture1;
 uniform vec2 uOffset;
+
+uniform float scroll;
 varying vec2 vUv;
 
 #define M_PI 3.1415926535897932384626433832795
@@ -42,5 +44,6 @@ void main() {
    vUv = scaled_uv + center;
    vUv.x -= sin(time * sineSpeed) * sineIntensity;
 
-   gl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0 );
+   // gl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0 );
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position.x, sin(position.x) * scroll + position.y, position.z, 1.0);
 }

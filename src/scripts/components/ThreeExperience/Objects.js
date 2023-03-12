@@ -61,13 +61,11 @@ export default class ThreeObjects extends ThreeRenderer {
                 side: THREE.DoubleSide,
                 transparent: true,
                 uniforms: {
-                  time: { type: 'f', value: 0.0 },
-                  texture1: { type: 't', value: texture },
-                  opacity: { type: 't', value: 1.0 },
-                  uOffset: {
-                    //distortion strength
-                    value: new THREE.Vector2(0.0, 0.0)
-                  },
+                  time: { value: 0.0 },
+                  texture1: { value: texture },
+                  opacity: { value: 1.0 },
+                  scroll: { value: 0.0 },
+                  uOffset: { value: new THREE.Vector2(0.0, 0.0) },
                 },
                 vertexShader: vertexShader,
                 fragmentShader: fragmentShader
@@ -76,7 +74,7 @@ export default class ThreeObjects extends ThreeRenderer {
             this.cards.materials.push(material);
 
             // Generate cards
-            cardGeo = new THREE.PlaneGeometry(this.cards.width, this.cards.height, 1, 1);
+            cardGeo = new THREE.PlaneGeometry(this.cards.width, this.cards.height, 10, 10);
             card = new THREE.Mesh(cardGeo, material);
             
             // Place card at nth position using card width plus gap
@@ -104,7 +102,8 @@ export default class ThreeObjects extends ThreeRenderer {
         // Update material uniforms
         this.cards.materials.forEach((mat, index) => {
             mat.uniforms.time.value = this.time.elapsed * 2;
-            mat.uniforms.uOffset.value.set(this.s * .15, this.s * .25)
+            mat.uniforms.scroll.value = this.s;
+            mat.uniforms.uOffset.value.set(this.s * 0.15, this.s * 0.25)
         });
 
         // Set cards +/- constraints

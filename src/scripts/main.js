@@ -15,12 +15,7 @@ const App = (() => {
             ThreeExp.resize();
         });
 
-        // window.addEventListener('mousemove', (e) => {
-        //     ThreeExp.mouse.evt = e;
-        //     ThreeExp.setCursor();
-        // });
-
-        window.addEventListener( 'pointermove', (e) => {
+        window.addEventListener( 'mousemove', (e) => {
             ThreeExp.mouse.evt = e;
             ThreeExp.setCursor();
         } );
@@ -53,7 +48,7 @@ const App = (() => {
         JSKnow = new KnowJS();
         ThreeExp = new ThreeExperience({
             domSelector: '#webgl',
-            orbitControls: 1,
+            orbitControls: false,
             showGUI: false
         });
 
