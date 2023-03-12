@@ -1,11 +1,11 @@
 #include <common>
 
 // varying vec2 vUv;
-// uniform float time;
-// vec2 center = vec2(0.5);
-// float scale = 0.78;
-// float sineSpeed = 1.0;
-// float sineIntensity = 0.025;
+uniform float time;
+vec2 center = vec2(0.5);
+float scale = 0.78;
+float sineSpeed = 1.0;
+float sineIntensity = 0.025;
 
 // /*
 //  Scales and offsets the texture coordinate uv so that it is centered 
@@ -36,5 +36,11 @@ vec3 deformationCurve(vec3 position, vec2 uv, vec2 offset) {
 void main() {
    vUv = uv;
    vec3 newPosition = deformationCurve(position, uv, uOffset);
+
+   vec2 offset_uv = uv - center;
+   vec2 scaled_uv = offset_uv * scale;
+   vUv = scaled_uv + center;
+   vUv.x -= sin(time * sineSpeed) * sineIntensity;
+
    gl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0 );
 }

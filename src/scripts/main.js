@@ -53,7 +53,7 @@ const App = (() => {
         JSKnow = new KnowJS();
         ThreeExp = new ThreeExperience({
             domSelector: '#webgl',
-            orbitControls: false,
+            orbitControls: 1,
             showGUI: false
         });
 

@@ -25,7 +25,7 @@ export default class ThreeObjects extends ThreeRenderer {
         this.slideIndx = 0;
         this.imgScale = 3;
         this.cards = {
-            total: 4,
+            total: 5,
             width: 1.5 * this.imgScale, // Image ratio is w / h
             height: 1 * this.imgScale,
             gap: .10,
@@ -36,7 +36,7 @@ export default class ThreeObjects extends ThreeRenderer {
         };
 
         // Lerp
-        this.position = 0.0;
+        this.position = 100;
         this.lerpAmt = 0.085; // Higher the value = faster
 
         this.createCards();
@@ -90,7 +90,6 @@ export default class ThreeObjects extends ThreeRenderer {
             });    
 
             this.cards.group.add(card);
-          
         }
 
         // Set cards start/end constraints
@@ -105,7 +104,7 @@ export default class ThreeObjects extends ThreeRenderer {
         // Update material uniforms
         this.cards.materials.forEach((mat, index) => {
             mat.uniforms.time.value = this.time.elapsed * 2;
-            mat.uniforms.uOffset.value.set(this.s * .5, this.s * .25)
+            mat.uniforms.uOffset.value.set(this.s * .15, this.s * .25)
         });
 
         // Set cards +/- constraints
