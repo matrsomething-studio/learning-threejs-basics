@@ -1,68 +1,64 @@
-// Style(s)
+// Import styles
 import '../styles/main.scss';
 
-// Components(s)
+// Import components
 import KnowJS from './components/KnowJS';
 import ThreeExperience from './components/ThreeExperience';
 
-// App
-const App = (() => {
-    let JSKnow = null;
-    let ThreeExp = null;
+// Define App
+const App = {
+  JSKnow: null,
+  ThreeExp: null,
 
-    function bindEvents() {
-        window.addEventListener('resize', (e) => {
-            ThreeExp.resize();
-        });
+  init() {
+    this.JSKnow = new KnowJS();
+    this.ThreeExp = new ThreeExperience({
+      domSelector: '#webgl',
+      orbitControls: false,
+      showGUI: false,
+    });
 
-        window.addEventListener( 'mousemove', (e) => {
-            ThreeExp.mouse.evt = e;
-            ThreeExp.setCursor();
-        } );
-        
-        window.addEventListener('mousedown', (e) => {
-            ThreeExp.mouse.isDown = true;  
-        });
+    this.bindEvents();
+  },
 
-        window.addEventListener('mouseup', (e) => {
-            ThreeExp.mouse.isDown = false;
-        });
+  bindEvents() {
+    window.addEventListener('resize', () => {
+      this.ThreeExp.resize();
+    });
 
-        window.addEventListener('wheel', (e) => {
-            ThreeExp.wheel.evt = e;
-            ThreeExp.setScroll();  
-            ThreeExp.setSpeed();
-        });
+    window.addEventListener('mousemove', (e) => {
+      this.ThreeExp.mouse.evt = e;
+      this.ThreeExp.setCursor();
+    });
 
-        document.querySelector('[data-btn="zoom"]').addEventListener('click', (e) => {
-            e.preventDefault();
-            ThreeExp.handleObjectsOnClick();  
-        });
+    window.addEventListener('mousedown', () => {
+      this.ThreeExp.mouse.isDown = true;
+    });
 
-        document.addEventListener('click', (e) => {
-            ThreeExp.handleCardsOnClick();
-        });
-    }
+    window.addEventListener('mouseup', () => {
+      this.ThreeExp.mouse.isDown = false;
+    });
 
-    function init() {
-        JSKnow = new KnowJS();
-        ThreeExp = new ThreeExperience({
-            domSelector: '#webgl',
-            orbitControls: false,
-            showGUI: false
-        });
+    window.addEventListener('wheel', (e) => {
+      this.ThreeExp.wheel.evt = e;
+      this.ThreeExp.setScroll();
+      this.ThreeExp.setSpeed();
+    });
 
-        bindEvents();
-    }
+    document.querySelector('[data-btn="zoom"]').addEventListener('click', (e) => {
+      e.preventDefault();
+      this.ThreeExp.handleObjectsOnClick();
+    });
 
-    return {
-        init: init,
-    };
-})();
+    document.addEventListener('click', () => {
+      this.ThreeExp.handleCardsOnClick();
+    });
+  },
+};
 
 // Load App
 document.addEventListener('readystatechange', (e) => {
-    if (e.target.readyState === 'complete') {
-        App.init();
-    }
+  if (e.target.readyState === 'complete') {
+    App.init();
+  }
 });

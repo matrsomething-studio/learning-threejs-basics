@@ -41,8 +41,7 @@ export default class ThreeExperience extends ThreeControls {
     }
 
     setSpeed() {
-        this.speed.value += (this.wheel.evt.deltaY * this.speed.scale);
-        console.log(this.speed);
+        this.speed.value += this.wheel.evt.deltaY * this.speed.scale;
     }
 
     setCursor() {
@@ -51,7 +50,7 @@ export default class ThreeExperience extends ThreeControls {
 
         // For raycasting
         this.mouse.pointer.x = this.mouse.evt.clientX / this.width * 2 - 1
-        this.mouse.pointer.y = - (this.mouse.evt.clientY / this.height) * 2 + 1
+        this.mouse.pointer.y = -(this.mouse.evt.clientY / this.height) * 2 + 1
     }
 
     setScroll() {
@@ -114,7 +113,7 @@ export default class ThreeExperience extends ThreeControls {
         const intersects = this.raycaster.intersectObjects(this.scene.children);
         
         if (intersects.length > 0) {
-            let clickedObject = intersects[0].object;
+            const clickedObject = intersects[0].object;
 
             tl.to(clickedObject.position, {
                 y: -dy,

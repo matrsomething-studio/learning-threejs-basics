@@ -71,6 +71,7 @@ export default class ThreeObjects extends ThreeRenderer {
                 fragmentShader: fragmentShader
             });
 
+            // Collect generated materials
             this.cards.materials.push(material);
 
             // Generate cards
@@ -80,13 +81,17 @@ export default class ThreeObjects extends ThreeRenderer {
             // Place card at nth position using card width plus gap
             card.position.x = n * (this.cards.width + this.cards.gap);
 
+            // Unique data-set
+            card.uid = `uid-card-${n+1}`;
+
             // Collect card range data
             this.cards.ranges.push({ 
                 start: card.position.x - this.cards.width / 2 - this.cards.gap / 2,
                 mid: card.position.x,
                 end: card.position.x + this.cards.width / 2 + this.cards.gap / 2
-            });    
+            });
 
+            // Add card to group set
             this.cards.group.add(card);
         }
 
@@ -103,7 +108,7 @@ export default class ThreeObjects extends ThreeRenderer {
         this.cards.materials.forEach((mat, index) => {
             mat.uniforms.time.value = this.time.elapsed * 2;
             mat.uniforms.scroll.value = this.s;
-            mat.uniforms.uOffset.value.set(this.s * 0.15, this.s * 0.25)
+            mat.uniforms.uOffset.value.set(this.s * 0.15, this.s * 0.25);
         });
 
         // Set cards +/- constraints
