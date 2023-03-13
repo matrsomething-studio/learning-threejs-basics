@@ -26,6 +26,15 @@ const App = {
       this.ThreeExp.resize();
     });
 
+    
+    document.querySelector('[data-btn="zoom"]').addEventListener('mouseout', (e) => {
+      this.ThreeExp.testClick2();
+    });
+
+    document.querySelector('[data-btn="zoom"]').addEventListener('mouseover', (e) => {
+      this.ThreeExp.testClick();
+    });
+
     window.addEventListener('mousemove', (e) => {
       this.ThreeExp.mouse.evt = e;
       this.ThreeExp.setCursor();
