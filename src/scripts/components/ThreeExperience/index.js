@@ -131,58 +131,65 @@ export default class ThreeExperience extends ThreeControls {
     }
 
     testClick() {
-        this.cards.materials.forEach((mat, index) => {
-            const tl = gsap.timeline({ repeat: 0 });
-            
+        const tl = gsap.timeline({ repeat: 0 });
+        const time = 0.55;
+        const scaleFactor = 0.5;
+        
+        this.cards.materials.forEach((mat, index) => {    
+            // (imageBounds.x (w) * scaleFactor) / imageBounds.y (h) 
+            let scaledRatio =  mat.uniforms.imageBounds.value.x * scaleFactor / mat.uniforms.imageBounds.value.y;
+
             tl.to(mat.uniforms.scale.value, { 
-                y: 2.0,
+                x: scaledRatio, 
                 ease: 'expo.inOut',
-                duration: .5 
-            });
+                duration: time 
+            }, `-=${time}`);
         });
 
         this.cards.group.children.forEach((card, index) => {
-            const tl = gsap.timeline({ repeat: 0 });
-            
             tl.to(card.scale, { 
-                x: 0.5,
+                x: scaleFactor,
                 ease: 'expo.inOut',
-                duration: .5 
-            });
+                duration: time
+            }, `-=${time}`);
 
             tl.to(card.position, { 
                 x: index * (this.cards.width / 2.0 + this.cards.gap),
                 ease: 'expo.inOut',
-                duration: .5 
-            }, '-=.5');
+                duration: time
+            }, `-=${time}`);
         });
+
+        tl.play(0);
     }
 
     testClick2() {
-        this.cards.materials.forEach((mat, index) => {
-            const tl = gsap.timeline({ repeat: 0 });
-            
+        const tl = gsap.timeline({ repeat: 0 });
+        const time = 0.55;
+
+        this.cards.materials.forEach((mat, index) => {       
+            let scaledRatio =  mat.uniforms.imageBounds.value.x / mat.uniforms.imageBounds.value.y;     
             tl.to(mat.uniforms.scale.value, { 
-                y: 1.0,
+                x: scaledRatio,
                 ease: 'expo.inOut',
-                duration: .5 
-            });
+                duration: time
+            }, `-=${time}`);
         });
 
-        this.cards.group.children.forEach((card, index) => {
-            const tl = gsap.timeline({ repeat: 0 });
-            
+        this.cards.group.children.forEach((card, index) => {            
             tl.to(card.scale, { 
                 x: 1.0,
                 ease: 'expo.inOut',
-                duration: .5 
-            });
+                duration: time
+            }, `-=${time}`);
 
             tl.to(card.position, { 
                 x: index * (this.cards.width + this.cards.gap),
                 ease: 'expo.inOut',
-                duration: .5 
-            }, '-=.5');
+                duration: time
+            }, `-=${time}`);
+
+            tl.play(0);
         });
     }
 }

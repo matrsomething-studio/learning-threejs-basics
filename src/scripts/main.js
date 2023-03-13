@@ -22,17 +22,21 @@ const App = {
   },
 
   bindEvents() {
-    window.addEventListener('resize', () => {
-      this.ThreeExp.resize();
-    });
-
-    
     document.querySelector('[data-btn="zoom"]').addEventListener('mouseout', (e) => {
       this.ThreeExp.testClick2();
     });
 
     document.querySelector('[data-btn="zoom"]').addEventListener('mouseover', (e) => {
       this.ThreeExp.testClick();
+    });
+
+    document.querySelector('[data-btn="zoom"]').addEventListener('click', (e) => {
+      e.preventDefault();
+      this.ThreeExp.handleObjectsOnClick();
+    });
+
+    window.addEventListener('resize', () => {
+      this.ThreeExp.resize();
     });
 
     window.addEventListener('mousemove', (e) => {
@@ -52,11 +56,6 @@ const App = {
       this.ThreeExp.wheel.evt = e;
       this.ThreeExp.setScroll();
       this.ThreeExp.setSpeed();
-    });
-
-    document.querySelector('[data-btn="zoom"]').addEventListener('click', (e) => {
-      e.preventDefault();
-      this.ThreeExp.handleObjectsOnClick();
     });
 
     document.addEventListener('click', () => {
@@ -86,7 +85,7 @@ class Fade extends Highway.Transition {
     from.remove();
 
     // Animation
-    gsap.fromTo(to, 0.5,
+    gsap.fromTo(to, 0.25,
       { opacity: 0 },
       {
         opacity: 1,
@@ -97,7 +96,7 @@ class Fade extends Highway.Transition {
 
   out({ from, done }) {
     // Animation
-    gsap.fromTo(from, 0.5,
+    gsap.fromTo(from, 0.25,
       { opacity: 1 },
       {
         opacity: 0,
