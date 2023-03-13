@@ -20,6 +20,7 @@
     "vite-plugin-glsl": "^1.0.2"
   },
   "dependencies": {
+    "@dogstudio/highway": "^2.2.1",
     "bootstrap": "^5.2.3",
     "stats.js": "^0.17.0",
     "three": "^0.148.0"

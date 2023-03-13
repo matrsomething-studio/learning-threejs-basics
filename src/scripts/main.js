@@ -1,72 +1,115 @@
-// Style(s)
+// Import styles
 import '../styles/main.scss';
 
-// Components(s)
+// Import components
 import KnowJS from './components/KnowJS';
 import ThreeExperience from './components/ThreeExperience';
 
-// App
-const App = (() => {
-    let JSKnow = null;
-    let ThreeExp = null;
+// Define App
+const App = {
+  JSKnow: null,
+  ThreeExp: null,
 
-    function bindEvents() {
-        window.addEventListener('resize', (e) => {
-            ThreeExp.resize();
-        });
+  init() {
+    this.JSKnow = new KnowJS();
+    this.ThreeExp = new ThreeExperience({
+      domSelector: '#webgl',
+      orbitControls: 1,
+      showGUI: false,
+    });
 
-        // window.addEventListener('mousemove', (e) => {
-        //     ThreeExp.mouse.evt = e;
-        //     ThreeExp.setCursor();
-        // });
+    this.bindEvents();
+  },
 
-        window.addEventListener( 'pointermove', (e) => {
-            ThreeExp.mouse.evt = e;
-            ThreeExp.setCursor();
-        } );
-        
-        window.addEventListener('mousedown', (e) => {
-            ThreeExp.mouse.isDown = true;  
-        });
+  bindEvents() {
+    document.querySelector('[data-btn="zoom"]').addEventListener('mouseout', (e) => {
+      this.ThreeExp.testClick2();
+    });
 
-        window.addEventListener('mouseup', (e) => {
-            ThreeExp.mouse.isDown = false;
-        });
+    document.querySelector('[data-btn="zoom"]').addEventListener('mouseover', (e) => {
+      this.ThreeExp.testClick();
+    });
 
-        window.addEventListener('wheel', (e) => {
-            ThreeExp.wheel.evt = e;
-            ThreeExp.setScroll();  
-        });
+    document.querySelector('[data-btn="zoom"]').addEventListener('click', (e) => {
+      e.preventDefault();
+      this.ThreeExp.handleObjectsOnClick();
+    });
 
-        document.querySelector('[data-btn="zoom"]').addEventListener('click', (e) => {
-            e.preventDefault();
-            ThreeExp.handleObjectsOnClick();  
-        });
+    window.addEventListener('resize', () => {
+      this.ThreeExp.resize();
+    });
 
-        document.addEventListener('click', (e) => {
-            ThreeExp.handleCardsOnClick();
-        });
-    }
+    window.addEventListener('mousemove', (e) => {
+      this.ThreeExp.mouse.evt = e;
+      this.ThreeExp.setCursor();
+    });
 
-    function init() {
-        JSKnow = new KnowJS();
-        ThreeExp = new ThreeExperience({
-            domSelector: '#webgl',
-            orbitControls: false,
-            showGUI: false
-        });
+    window.addEventListener('mousedown', () => {
+      this.ThreeExp.mouse.isDown = true;
+    });
 
-        bindEvents();
-    }
+    window.addEventListener('mouseup', () => {
+      this.ThreeExp.mouse.isDown = false;
+    });
 
-    return {
-        init: init,
-    };
-})();
+    window.addEventListener('wheel', (e) => {
+      this.ThreeExp.wheel.evt = e;
+      this.ThreeExp.setScroll();
+      this.ThreeExp.setSpeed();
+    });
+
+    document.addEventListener('click', () => {
+      this.ThreeExp.handleCardsOnClick();
+    });
+  },
+};
 
 // Load App
 document.addEventListener('readystatechange', (e) => {
-    if (e.target.readyState === 'complete') {
-        App.init();
-    }
+  if (e.target.readyState === 'complete') {
+    App.init();
+  }
+});
+
+
+// Import Highway
+import Highway from '@dogstudio/highway';
+
+// Fade
+class Fade extends Highway.Transition {
+  in({ from, to, done }) {
+    // Reset Scroll
+    window.scrollTo(0, 0);
+
+    // Remove Old View
+    from.remove();
+
+    // Animation
+    gsap.fromTo(to, 0.25,
+      { opacity: 0 },
+      {
+        opacity: 1,
+        onComplete: done
+      }
+    );
+  }
+
+  out({ from, done }) {
+    // Animation
+    gsap.fromTo(from, 0.25,
+      { opacity: 1 },
+      {
+        opacity: 0,
+        onComplete: done
+      }
+    );
+  }
+}
+
+
+// Call Highway.Core once.
+const H = new Highway.Core({
+  transitions: {
+    default: Fade
+  }
 });

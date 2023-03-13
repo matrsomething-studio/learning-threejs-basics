@@ -9,6 +9,13 @@ export default class ThreeExperience extends ThreeControls {
         this.playing = false;
         this.rafID = null;
 
+         // Speed
+         this.speed = {
+            value: this.wheel.deltaY || 0,
+            scale: .0004,
+            friction: .9,
+        };
+
         this.resize();
         this.play();
     }
@@ -33,13 +40,17 @@ export default class ThreeExperience extends ThreeControls {
         }
     }
 
+    setSpeed() {
+        this.speed.value += this.wheel.evt.deltaY * this.speed.scale;
+    }
+
     setCursor() {
         this.cursor.x = this.mouse.evt.clientX / this.width - 0.5;
         this.cursor.y = this.mouse.evt.clientY / this.height - 0.5;
 
         // For raycasting
         this.mouse.pointer.x = this.mouse.evt.clientX / this.width * 2 - 1
-        this.mouse.pointer.y = - (this.mouse.evt.clientY / this.height) * 2 + 1
+        this.mouse.pointer.y = -(this.mouse.evt.clientY / this.height) * 2 + 1
     }
 
     setScroll() {
@@ -52,8 +63,9 @@ export default class ThreeExperience extends ThreeControls {
     }
 
     update() {
+        this.speed.value *= this.speed.friction;
         this.updateBase();
-        this.updateObjects();
+        this.updateObjects(this.speed.value);
         this.updateControls();
         this.updateRenderer();
         this.rafID = requestAnimationFrame(this.update.bind(this));
@@ -101,7 +113,7 @@ export default class ThreeExperience extends ThreeControls {
         const intersects = this.raycaster.intersectObjects(this.scene.children);
         
         if (intersects.length > 0) {
-            let clickedObject = intersects[0].object;
+            const clickedObject = intersects[0].object;
 
             tl.to(clickedObject.position, {
                 y: -dy,
@@ -116,5 +128,68 @@ export default class ThreeExperience extends ThreeControls {
 
             tl.play(0);
         }
+    }
+
+    testClick() {
+        const tl = gsap.timeline({ repeat: 0 });
+        const time = 0.55;
+        const scaleFactor = 0.5;
+        
+        this.cards.materials.forEach((mat, index) => {    
+            // (imageBounds.x (w) * scaleFactor) / imageBounds.y (h) 
+            let scaledRatio =  mat.uniforms.imageBounds.value.x * scaleFactor / mat.uniforms.imageBounds.value.y;
+
+            tl.to(mat.uniforms.scale.value, { 
+                x: scaledRatio, 
+                ease: 'expo.inOut',
+                duration: time 
+            }, `-=${time}`);
+        });
+
+        this.cards.group.children.forEach((card, index) => {
+            tl.to(card.scale, { 
+                x: scaleFactor,
+                ease: 'expo.inOut',
+                duration: time
+            }, `-=${time}`);
+
+            tl.to(card.position, { 
+                x: index * (this.cards.width / 2.0 + this.cards.gap),
+                ease: 'expo.inOut',
+                duration: time
+            }, `-=${time}`);
+        });
+
+        tl.play(0);
+    }
+
+    testClick2() {
+        const tl = gsap.timeline({ repeat: 0 });
+        const time = 0.55;
+
+        this.cards.materials.forEach((mat, index) => {       
+            let scaledRatio =  mat.uniforms.imageBounds.value.x / mat.uniforms.imageBounds.value.y;     
+            tl.to(mat.uniforms.scale.value, { 
+                x: scaledRatio,
+                ease: 'expo.inOut',
+                duration: time
+            }, `-=${time}`);
+        });
+
+        this.cards.group.children.forEach((card, index) => {            
+            tl.to(card.scale, { 
+                x: 1.0,
+                ease: 'expo.inOut',
+                duration: time
+            }, `-=${time}`);
+
+            tl.to(card.position, { 
+                x: index * (this.cards.width + this.cards.gap),
+                ease: 'expo.inOut',
+                duration: time
+            }, `-=${time}`);
+
+            tl.play(0);
+        });
     }
 }

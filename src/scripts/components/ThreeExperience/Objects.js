@@ -18,13 +18,14 @@ export default class ThreeObjects extends ThreeRenderer {
 
         // States
         this.isMoved = false;
+        this.s = 0;
     
         // Cards
         this.slideUI = document.querySelector('#slide-indx');
         this.slideIndx = 0;
         this.imgScale = 3;
         this.cards = {
-            total: 4,
+            total: 5,
             width: 1.5 * this.imgScale, // Image ratio is w / h
             height: 1 * this.imgScale,
             gap: .10,
@@ -35,7 +36,7 @@ export default class ThreeObjects extends ThreeRenderer {
         };
 
         // Lerp
-        this.position = 0.0;
+        this.position = 100;
         this.lerpAmt = 0.085; // Higher the value = faster
 
         this.createCards();
@@ -60,32 +61,41 @@ export default class ThreeObjects extends ThreeRenderer {
                 side: THREE.DoubleSide,
                 transparent: true,
                 uniforms: {
-                  time: { type: 'f', value: 0.0 },
-                  texture1: { type: 't', value: texture },
-                  opacity: { type: 't', value: 1.0 }
+                  time: { value: 0.0 },
+                  texture1: { value: texture },
+                  opacity: { value: 1.0 },
+                  scroll: { value: 0.0 },
+                  uOffset: { value: new THREE.Vector2(0.0, 0.0) },
+                  scale: { value: new THREE.Vector2(1.5, 1.0) },
+                  imageBounds: { value: new THREE.Vector2(700, 467) },
+                  zoom: { value: 1.0 }
                 },
                 vertexShader: vertexShader,
                 fragmentShader: fragmentShader
             });
 
+            // Collect generated materials
             this.cards.materials.push(material);
 
             // Generate cards
-            cardGeo = new THREE.PlaneGeometry(this.cards.width, this.cards.height, 1, 1);
+            cardGeo = new THREE.PlaneGeometry(this.cards.width, this.cards.height, 10, 10);
             card = new THREE.Mesh(cardGeo, material);
             
             // Place card at nth position using card width plus gap
             card.position.x = n * (this.cards.width + this.cards.gap);
+
+            // Unique data-set
+            card.uid = `uid-card-${n+1}`;
 
             // Collect card range data
             this.cards.ranges.push({ 
                 start: card.position.x - this.cards.width / 2 - this.cards.gap / 2,
                 mid: card.position.x,
                 end: card.position.x + this.cards.width / 2 + this.cards.gap / 2
-            });    
+            });
 
+            // Add card to group set
             this.cards.group.add(card);
-          
         }
 
         // Set cards start/end constraints
@@ -98,8 +108,10 @@ export default class ThreeObjects extends ThreeRenderer {
 
     updateCards() {
         // Update material uniforms
-        this.cards.materials.forEach((mat) => {
+        this.cards.materials.forEach((mat, index) => {
             mat.uniforms.time.value = this.time.elapsed * 2;
+            mat.uniforms.scroll.value = this.s;
+            mat.uniforms.uOffset.value.set(this.s * 0.15, this.s * 0.25);
         });
 
         // Set cards +/- constraints
@@ -118,7 +130,8 @@ export default class ThreeObjects extends ThreeRenderer {
         this.slideUI.innerHTML = `${this.slideIndx} of ${this.cards.total}`;
     }
 
-    updateObjects() {
+    updateObjects(speed) {
+        this.s = speed;
         this.updateCards();
     }
 }
