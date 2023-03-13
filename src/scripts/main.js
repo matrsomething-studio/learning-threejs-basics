@@ -14,7 +14,7 @@ const App = {
     this.JSKnow = new KnowJS();
     this.ThreeExp = new ThreeExperience({
       domSelector: '#webgl',
-      orbitControls: false,
+      orbitControls: 1,
       showGUI: false,
     });
 

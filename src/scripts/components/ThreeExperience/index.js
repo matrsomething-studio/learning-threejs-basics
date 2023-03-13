@@ -129,4 +129,60 @@ export default class ThreeExperience extends ThreeControls {
             tl.play(0);
         }
     }
+
+    testClick() {
+        this.cards.materials.forEach((mat, index) => {
+            const tl = gsap.timeline({ repeat: 0 });
+            
+            tl.to(mat.uniforms.scale.value, { 
+                y: 2.0,
+                ease: 'expo.inOut',
+                duration: .5 
+            });
+        });
+
+        this.cards.group.children.forEach((card, index) => {
+            const tl = gsap.timeline({ repeat: 0 });
+            
+            tl.to(card.scale, { 
+                x: 0.5,
+                ease: 'expo.inOut',
+                duration: .5 
+            });
+
+            tl.to(card.position, { 
+                x: index * (this.cards.width / 2.0 + this.cards.gap),
+                ease: 'expo.inOut',
+                duration: .5 
+            }, '-=.5');
+        });
+    }
+
+    testClick2() {
+        this.cards.materials.forEach((mat, index) => {
+            const tl = gsap.timeline({ repeat: 0 });
+            
+            tl.to(mat.uniforms.scale.value, { 
+                y: 1.0,
+                ease: 'expo.inOut',
+                duration: .5 
+            });
+        });
+
+        this.cards.group.children.forEach((card, index) => {
+            const tl = gsap.timeline({ repeat: 0 });
+            
+            tl.to(card.scale, { 
+                x: 1.0,
+                ease: 'expo.inOut',
+                duration: .5 
+            });
+
+            tl.to(card.position, { 
+                x: index * (this.cards.width + this.cards.gap),
+                ease: 'expo.inOut',
+                duration: .5 
+            }, '-=.5');
+        });
+    }
 }
