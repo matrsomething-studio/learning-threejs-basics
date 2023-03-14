@@ -25,13 +25,13 @@ export default class ThreeBase {
         };
         
         // Scroll
-        this.scroll = 0;
+        this.scroll = 0.0;
 
         // Speed
         this.speed = {
-            value: this.wheel.deltaY || 0,
-            scale: .0004,
-            friction: .9
+            friction: 0.9,
+            scale: 0.0004,
+            value: this.wheel.deltaY || 0.0            
         };
 
         this.updateBase();
@@ -39,6 +39,20 @@ export default class ThreeBase {
 
     setSpeed() {
         this.speed.value += this.wheel.evt.deltaY * this.speed.scale;
+    }
+
+    setCursor() {
+        this.mouse.pointer.x = this.mouse.evt.clientX / this.width * 2 - 1;
+        this.mouse.pointer.y = -(this.mouse.evt.clientY / this.height) * 2 + 1;
+    }
+
+    setScroll() {
+        this.wheel.isActive = true;
+        this.scroll -= this.wheel.evt.deltaY * 0.0085;
+        
+        setTimeout(() => {
+            this.wheel.isActive = false;
+        }, 150);
     }
 
     resizeWindow() {

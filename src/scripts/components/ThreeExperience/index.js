@@ -7,6 +7,7 @@ export default class ThreeExperience extends ThreeControls {
         super(options);
         this.playing = false;
         this.rafID = null;
+
         // States
         this.isMoved = false;
         this.resize();
@@ -33,21 +34,6 @@ export default class ThreeExperience extends ThreeControls {
         }
     }
 
-    setCursor() {
-        // For raycasting
-        this.mouse.pointer.x = this.mouse.evt.clientX / this.width * 2 - 1
-        this.mouse.pointer.y = -(this.mouse.evt.clientY / this.height) * 2 + 1
-    }
-
-    setScroll() {
-        this.wheel.isActive = true;
-        this.scroll -= this.wheel.evt.deltaY * 0.0085;
-        
-        setTimeout(() => {
-            this.wheel.isActive = false;
-        }, 150);
-    }
-
     update() {
         this.updateBase();
         this.updateObjects();
@@ -63,7 +49,7 @@ export default class ThreeExperience extends ThreeControls {
         this.destroyScene();
     }
 
-    // Event Handlers
+    // REFACTOR AND CLEAN UP
     handleObjectsOnClick() {
         const tl = gsap.timeline({ repeat: 0 });
         const dy = (this.isMoved) ? 0 : 10;

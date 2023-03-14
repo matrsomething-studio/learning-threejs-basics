@@ -20,8 +20,8 @@ export default class ThreeObjects extends ThreeRenderer {
         this.slideUI = document.querySelector('#slide-indx');
         this.slideIndx = 0;
 
-        // Images
-        this.img = {
+        // Image Settings
+        this.imgSettings = {
             scale: 2.5,
             w: 300,
             h: 420
@@ -30,9 +30,9 @@ export default class ThreeObjects extends ThreeRenderer {
         // Cards
         this.cards = {
             total: 10,
-            width: 1 * this.img.scale, // Image ratio is w / h
-            height: 1.4 * this.img.scale,
-            gap: .10,
+            width: 1.0 * this.imgSettings.scale, // Image ratio is w / h
+            height: 1.4 * this.imgSettings.scale,
+            gap: 0.10,
             ranges: [],
             constraints: {},
             group: new THREE.Group(),
@@ -40,7 +40,7 @@ export default class ThreeObjects extends ThreeRenderer {
         };
 
         // Lerp
-        this.position = 100;
+        this.position = 100.0; // How far off the screen group before tween in
         this.lerpAmt = 0.085; // Higher the value = faster
 
         this.createCards();
@@ -64,10 +64,10 @@ export default class ThreeObjects extends ThreeRenderer {
             material = new THREE.ShaderMaterial({
                 transparent: true,
                 uniforms: {
-                    uImageBounds: { value: new THREE.Vector2(this.img.w, this.img.h) },
+                    uImageBounds: { value: new THREE.Vector2(this.imgSettings.w, this.imgSettings.h) },
                     uOffset: { value: new THREE.Vector2(0.0, 0.0) },
                     uOpacity: { value: 1.0 },
-                    uScale: { value: new THREE.Vector2(this.img.w / this.img.h, 1.0) },
+                    uScale: { value: new THREE.Vector2(this.imgSettings.w / this.imgSettings.h, 1.0) },
                     uScroll: { value: 0.0 },
                     uTexture: { value: texture },
                     uTime: { value: 0.0 },
@@ -87,7 +87,7 @@ export default class ThreeObjects extends ThreeRenderer {
             // Place card at nth position using card width plus gap
             card.position.x = n * (this.cards.width + this.cards.gap);
 
-            // Unique data-set
+            // Unique data-set for content fetching
             card.uid = `uid-card-${n+1}`;
 
             // Collect card range data
