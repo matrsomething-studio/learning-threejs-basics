@@ -23,11 +23,16 @@ export default class ThreeObjects extends ThreeRenderer {
         // Cards
         this.slideUI = document.querySelector('#slide-indx');
         this.slideIndx = 0;
-        this.imgScale = 3;
+        this.imgScale = 2.5;
+        this.img = {
+            scale: 2.5,
+            w: 300,
+            h: 420
+        };
         this.cards = {
-            total: 5,
-            width: 1.5 * this.imgScale, // Image ratio is w / h
-            height: 1 * this.imgScale,
+            total: 10,
+            width: 1 * this.img.scale, // Image ratio is w / h
+            height: 1.4 * this.img.scale,
             gap: .10,
             ranges: [],
             constraints: {},
@@ -55,10 +60,10 @@ export default class ThreeObjects extends ThreeRenderer {
 
         for (let n = 0; n < this.cards.total; n++) {
             // Load texture and create materials
-            texture = textureLoader.load(`images/${n + 1}.jpg`);
+            texture = textureLoader.load(`images/1440-900/${n + 1}-small.jpg`);
             texture.needsUpdate = true;
             material = new THREE.ShaderMaterial({
-                side: THREE.DoubleSide,
+                // side: THREE.DoubleSide,
                 transparent: true,
                 uniforms: {
                   time: { value: 0.0 },
@@ -66,8 +71,8 @@ export default class ThreeObjects extends ThreeRenderer {
                   opacity: { value: 1.0 },
                   scroll: { value: 0.0 },
                   uOffset: { value: new THREE.Vector2(0.0, 0.0) },
-                  scale: { value: new THREE.Vector2(1.5, 1.0) },
-                  imageBounds: { value: new THREE.Vector2(700, 467) },
+                  scale: { value: new THREE.Vector2(this.img.w / this.img.h, 1.0) },
+                  imageBounds: { value: new THREE.Vector2(this.img.w, this.img.h) },
                   zoom: { value: 1.0 }
                 },
                 vertexShader: vertexShader,
@@ -110,7 +115,7 @@ export default class ThreeObjects extends ThreeRenderer {
         // Update material uniforms
         this.cards.materials.forEach((mat, index) => {
             mat.uniforms.time.value = this.time.elapsed * 2;
-            mat.uniforms.scroll.value = this.s;
+            mat.uniforms.scroll.value = this.s * .45;
             mat.uniforms.uOffset.value.set(this.s * 0.15, this.s * 0.25);
         });
 

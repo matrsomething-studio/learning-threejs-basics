@@ -22,15 +22,17 @@ const App = {
   },
 
   bindEvents() {
-    document.querySelector('[data-btn="zoom"]').addEventListener('mouseout', (e) => {
-      this.ThreeExp.testClick2();
+    const zoomBtn = document.querySelector('[data-btn="zoom"]');
+
+    zoomBtn.addEventListener('mouseover', (e) => {
+      this.ThreeExp.testMouseIn();
     });
 
-    document.querySelector('[data-btn="zoom"]').addEventListener('mouseover', (e) => {
-      this.ThreeExp.testClick();
+    zoomBtn.addEventListener('mouseout', (e) => {
+      this.ThreeExp.testMouseOut();
     });
 
-    document.querySelector('[data-btn="zoom"]').addEventListener('click', (e) => {
+    zoomBtn.addEventListener('click', (e) => {
       e.preventDefault();
       this.ThreeExp.handleObjectsOnClick();
     });

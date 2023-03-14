@@ -130,9 +130,9 @@ export default class ThreeExperience extends ThreeControls {
         }
     }
 
-    testClick() {
-        const tl = gsap.timeline({ repeat: 0, onComplete: this.setCardConstraints});
-        const time = 0.55;
+    testMouseIn() {
+        const tl = gsap.timeline({ repeat: 0 });
+        const time = 0.75;
         const scaleFactor = 0.5;
         
         this.cards.materials.forEach((mat, index) => {    
@@ -146,7 +146,7 @@ export default class ThreeExperience extends ThreeControls {
             }, `-=${time}`);
 
             tl.to(mat.uniforms.zoom, { 
-                value: scaledRatio * 2, 
+                value: scaledRatio * 2.25, 
                 ease: 'expo.inOut',
                 duration: time 
             }, `-=${time}`);
@@ -181,9 +181,9 @@ export default class ThreeExperience extends ThreeControls {
         tl.play(0);
     }
 
-    testClick2() {
-        const tl = gsap.timeline({ repeat: 0, onComplete: this.setCardConstraints });
-        const time = 0.55;
+    testMouseOut() {
+        const tl = gsap.timeline({ repeat: 0 });
+        const time = 0.75;
 
         this.cards.materials.forEach((mat, index) => {       
             let scaledRatio =  mat.uniforms.imageBounds.value.x / mat.uniforms.imageBounds.value.y;     
