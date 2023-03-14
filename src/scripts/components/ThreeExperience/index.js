@@ -131,7 +131,7 @@ export default class ThreeExperience extends ThreeControls {
     }
 
     testClick() {
-        const tl = gsap.timeline({ repeat: 0 });
+        const tl = gsap.timeline({ repeat: 0, onComplete: this.setCardConstraints});
         const time = 0.55;
         const scaleFactor = 0.5;
         
@@ -182,7 +182,7 @@ export default class ThreeExperience extends ThreeControls {
     }
 
     testClick2() {
-        const tl = gsap.timeline({ repeat: 0 });
+        const tl = gsap.timeline({ repeat: 0, onComplete: this.setCardConstraints });
         const time = 0.55;
 
         this.cards.materials.forEach((mat, index) => {       
