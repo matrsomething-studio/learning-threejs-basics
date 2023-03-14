@@ -8,8 +8,7 @@ import ThreeScene from './Scene';
 export default class ThreeCamera extends ThreeScene {
     constructor(options) {
         super(options);
-        this.options = options;
-       
+
         // Define camera
         this.camera = new THREE.PerspectiveCamera(75, this.width / this.height);
         this.camera.position.set(0, 0, 4);

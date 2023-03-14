@@ -1,9 +1,4 @@
 #include <common>
-
-// uniform sampler2D texture1;
-// varying vec2 vUv;
-// uniform float opacity;
-
 // /*
 // This is a simple fragment shader that samples a 2D texture 
 // and assigns the sampled color to the output fragment color.
@@ -22,35 +17,27 @@
 // the gl_FragColor built-in variable.
 // */
 // void main() {
-//     vec4 texelColor = texture2D(texture1, vUv);
-//     gl_FragColor = vec4(texelColor.rgb, opacity);
+//     vec4 texelColor = texture2D(uTexture, vUv);
+//     gl_FragColor = vec4(texelColor.rgb, uOpacity);
 // }
-
-
-// uniform sampler2D texture1;
-// uniform float opacity;
-// uniform vec2 uOffset;
-// varying vec2 vUv;
-
 
 
 // void main() {
-//     vec3 color = rgbShift(texture1, vUv, uOffset);
-//     gl_FragColor = vec4(color, opacity);
+//     vec3 color = rgbShift(uTexture, vUv, uOffset);
+//     gl_FragColor = vec4(color, uOpacity);
 // }
 
-
 varying vec2 vUv;
-uniform vec2 scale;
-uniform vec2 imageBounds;
-uniform sampler2D texture1;
-uniform float zoom;
-uniform float opacity;
+uniform vec2 uScale;
+uniform vec2 uImageBounds;
+uniform sampler2D uTexture;
+uniform float uZoom;
+uniform float uOpacity;
 uniform vec2 uOffset;
 
 vec3 rgbShift(sampler2D textureImage, vec2 uv, vec2 offset) {
-    float r = texture2D(textureImage,uv + offset).r;
-    vec2 gb = texture2D(textureImage,uv).gb;
+    float r = texture2D(textureImage, uv + offset).r;
+    vec2 gb = texture2D(textureImage, uv).gb;
     return vec3(r,gb);
 }
 
@@ -59,17 +46,16 @@ vec2 aspect(vec2 size) {
 }
 
 void main() {
-	vec2 s = aspect(scale);
-	vec2 i = aspect(imageBounds);
-	vec3 color = rgbShift(texture1, vUv, uOffset);
+	vec2 s = aspect(uScale);
+	vec2 i = aspect(uImageBounds);
+	vec3 color = rgbShift(uTexture, vUv, uOffset);
 	float rs = s.x / s.y;
 	float ri = i.x / i.y;
 	vec2 new = rs < ri ? vec2(i.x * s.y / i.y, s.y) : vec2(s.x, i.y * s.x / i.x);
 	vec2 offset = (rs < ri ? vec2((new.x - s.x) / 2.0, 0.0) : vec2(0.0, (new.y - s.y) / 2.0)) / new;
 	vec2 uv = vUv * s / new + offset;
-	vec2 zUv = (uv - vec2(0.5, 0.5)) / zoom + vec2(0.5, 0.5);
+	vec2 zUv = (uv - vec2(0.5, 0.5)) / uZoom + vec2(0.5, 0.5);
 	
-	gl_FragColor = texture2D(texture1, zUv);
-	
-	// gl_FragColor = vec4(color, opacity);
+	gl_FragColor = texture2D(uTexture, zUv);
+	// gl_FragColor = vec4(color, uOpacity);
 }

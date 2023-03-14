@@ -5,17 +5,10 @@ import ThreeControls from './Controls';
 export default class ThreeExperience extends ThreeControls {
     constructor(options, args) {
         super(options);
-        this.options = options;
         this.playing = false;
         this.rafID = null;
-
-         // Speed
-         this.speed = {
-            value: this.wheel.deltaY || 0,
-            scale: .0004,
-            friction: .9,
-        };
-
+        // States
+        this.isMoved = false;
         this.resize();
         this.play();
     }
@@ -40,14 +33,7 @@ export default class ThreeExperience extends ThreeControls {
         }
     }
 
-    setSpeed() {
-        this.speed.value += this.wheel.evt.deltaY * this.speed.scale;
-    }
-
     setCursor() {
-        this.cursor.x = this.mouse.evt.clientX / this.width - 0.5;
-        this.cursor.y = this.mouse.evt.clientY / this.height - 0.5;
-
         // For raycasting
         this.mouse.pointer.x = this.mouse.evt.clientX / this.width * 2 - 1
         this.mouse.pointer.y = -(this.mouse.evt.clientY / this.height) * 2 + 1
@@ -63,9 +49,8 @@ export default class ThreeExperience extends ThreeControls {
     }
 
     update() {
-        this.speed.value *= this.speed.friction;
         this.updateBase();
-        this.updateObjects(this.speed.value);
+        this.updateObjects();
         this.updateControls();
         this.updateRenderer();
         this.rafID = requestAnimationFrame(this.update.bind(this));
@@ -92,7 +77,7 @@ export default class ThreeExperience extends ThreeControls {
                 ease: 'expo.inOut',
             }, `-=${time}`);
 
-            tl.to(card.material.uniforms.opacity, { 
+            tl.to(card.material.uniforms.uOpacity, { 
                 value: da, 
                 duration: .25 
             }, `-=${time}`);
@@ -121,7 +106,7 @@ export default class ThreeExperience extends ThreeControls {
                 ease: 'expo.inOut',
             }, `-=${time}`);
 
-            tl.to(clickedObject.material.uniforms.opacity, { 
+            tl.to(clickedObject.material.uniforms.uOpacity, { 
                 value: da, 
                 duration: .25 
             }, `-=${time}`);
@@ -136,16 +121,15 @@ export default class ThreeExperience extends ThreeControls {
         const scaleFactor = 0.5;
         
         this.cards.materials.forEach((mat, index) => {    
-            // (imageBounds.x (w) * scaleFactor) / imageBounds.y (h) 
-            let scaledRatio =  mat.uniforms.imageBounds.value.x * scaleFactor / mat.uniforms.imageBounds.value.y;
+            let scaledRatio =  mat.uniforms.uImageBounds.value.x * scaleFactor / mat.uniforms.uImageBounds.value.y;
 
-            tl.to(mat.uniforms.scale.value, { 
+            tl.to(mat.uniforms.uScale.value, { 
                 x: scaledRatio, 
                 ease: 'expo.inOut',
                 duration: time 
             }, `-=${time}`);
 
-            tl.to(mat.uniforms.zoom, { 
+            tl.to(mat.uniforms.uZoom, { 
                 value: scaledRatio * 2.25, 
                 ease: 'expo.inOut',
                 duration: time 
@@ -162,19 +146,7 @@ export default class ThreeExperience extends ThreeControls {
             tl.to(card.position, { 
                 x: index * (this.cards.width / 2.0 + this.cards.gap),
                 ease: 'expo.inOut',
-                duration: time,
-                onComplete: () => {
-                    // Collect card range data
-                   this.cards.ranges.push({ 
-                       start: card.position.x - this.cards.width / 2 - this.cards.gap / 2,
-                       mid: card.position.x,
-                       end: card.position.x + this.cards.width / 2 + this.cards.gap / 2
-                   });
-
-                    // Set cards start/end constraints
-                   this.cards.constraints.start = -this.cards.ranges[0].mid;
-                   this.cards.constraints.end = -this.cards.ranges[this.cards.ranges.length - 1].mid;
-               }
+                duration: time
             }, `-=${time}`);
         });
         
@@ -186,14 +158,14 @@ export default class ThreeExperience extends ThreeControls {
         const time = 0.75;
 
         this.cards.materials.forEach((mat, index) => {       
-            let scaledRatio =  mat.uniforms.imageBounds.value.x / mat.uniforms.imageBounds.value.y;     
-            tl.to(mat.uniforms.scale.value, { 
+            let scaledRatio =  mat.uniforms.uImageBounds.value.x / mat.uniforms.uImageBounds.value.y;     
+            tl.to(mat.uniforms.uScale.value, { 
                 x: scaledRatio,
                 ease: 'expo.inOut',
                 duration: time
             }, `-=${time}`);
 
-            tl.to(mat.uniforms.zoom, { 
+            tl.to(mat.uniforms.uZoom, { 
                 value: 1, 
                 ease: 'expo.inOut',
                 duration: time 
@@ -210,19 +182,7 @@ export default class ThreeExperience extends ThreeControls {
             tl.to(card.position, { 
                 x: index * (this.cards.width + this.cards.gap),
                 ease: 'expo.inOut',
-                duration: time,
-                onComplete: () => {
-                    // Collect card range data
-                   this.cards.ranges.push({ 
-                       start: card.position.x - this.cards.width / 2 - this.cards.gap / 2,
-                       mid: card.position.x,
-                       end: card.position.x + this.cards.width / 2 + this.cards.gap / 2
-                   });
-
-                    // Set cards start/end constraints
-                   this.cards.constraints.start = -this.cards.ranges[0].mid;
-                   this.cards.constraints.end = -this.cards.ranges[this.cards.ranges.length - 1].mid;
-               }
+                duration: time
             }, `-=${time}`);
 
             tl.play(0);

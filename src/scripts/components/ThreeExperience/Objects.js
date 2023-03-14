@@ -16,19 +16,18 @@ export default class ThreeObjects extends ThreeRenderer {
     constructor(options) {
         super(options);
 
-        // States
-        this.isMoved = false;
-        this.s = 0;
-    
-        // Cards
+        // UI
         this.slideUI = document.querySelector('#slide-indx');
         this.slideIndx = 0;
-        this.imgScale = 2.5;
+
+        // Images
         this.img = {
             scale: 2.5,
             w: 300,
             h: 420
         };
+
+        // Cards
         this.cards = {
             total: 10,
             width: 1 * this.img.scale, // Image ratio is w / h
@@ -63,17 +62,16 @@ export default class ThreeObjects extends ThreeRenderer {
             texture = textureLoader.load(`images/1440-900/${n + 1}-small.jpg`);
             texture.needsUpdate = true;
             material = new THREE.ShaderMaterial({
-                // side: THREE.DoubleSide,
                 transparent: true,
                 uniforms: {
-                  time: { value: 0.0 },
-                  texture1: { value: texture },
-                  opacity: { value: 1.0 },
-                  scroll: { value: 0.0 },
-                  uOffset: { value: new THREE.Vector2(0.0, 0.0) },
-                  scale: { value: new THREE.Vector2(this.img.w / this.img.h, 1.0) },
-                  imageBounds: { value: new THREE.Vector2(this.img.w, this.img.h) },
-                  zoom: { value: 1.0 }
+                    uImageBounds: { value: new THREE.Vector2(this.img.w, this.img.h) },
+                    uOffset: { value: new THREE.Vector2(0.0, 0.0) },
+                    uOpacity: { value: 1.0 },
+                    uScale: { value: new THREE.Vector2(this.img.w / this.img.h, 1.0) },
+                    uScroll: { value: 0.0 },
+                    uTexture: { value: texture },
+                    uTime: { value: 0.0 },
+                    uZoom: { value: 1.0 }
                 },
                 vertexShader: vertexShader,
                 fragmentShader: fragmentShader
@@ -114,9 +112,9 @@ export default class ThreeObjects extends ThreeRenderer {
     updateCards() {
         // Update material uniforms
         this.cards.materials.forEach((mat, index) => {
-            mat.uniforms.time.value = this.time.elapsed * 2;
-            mat.uniforms.scroll.value = this.s * .45;
-            mat.uniforms.uOffset.value.set(this.s * 0.15, this.s * 0.25);
+            mat.uniforms.uTime.value = this.time.elapsed * 2.0;
+            mat.uniforms.uScroll.value = this.speed.value * 0.45;
+            mat.uniforms.uOffset.value.set(this.speed.value * 0.15, this.speed.value * 0.25);
         });
 
         // Set cards +/- constraints
@@ -135,8 +133,7 @@ export default class ThreeObjects extends ThreeRenderer {
         this.slideUI.innerHTML = `${this.slideIndx} of ${this.cards.total}`;
     }
 
-    updateObjects(speed) {
-        this.s = speed;
+    updateObjects() {
         this.updateCards();
     }
 }
