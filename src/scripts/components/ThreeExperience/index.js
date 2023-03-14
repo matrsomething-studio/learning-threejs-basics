@@ -144,8 +144,14 @@ export default class ThreeExperience extends ThreeControls {
                 ease: 'expo.inOut',
                 duration: time 
             }, `-=${time}`);
-        });
 
+            tl.to(mat.uniforms.zoom, { 
+                value: scaledRatio * 2, 
+                ease: 'expo.inOut',
+                duration: time 
+            }, `-=${time}`);
+        });
+        
         this.cards.group.children.forEach((card, index) => {
             tl.to(card.scale, { 
                 x: scaleFactor,
@@ -156,10 +162,22 @@ export default class ThreeExperience extends ThreeControls {
             tl.to(card.position, { 
                 x: index * (this.cards.width / 2.0 + this.cards.gap),
                 ease: 'expo.inOut',
-                duration: time
+                duration: time,
+                onComplete: () => {
+                    // Collect card range data
+                   this.cards.ranges.push({ 
+                       start: card.position.x - this.cards.width / 2 - this.cards.gap / 2,
+                       mid: card.position.x,
+                       end: card.position.x + this.cards.width / 2 + this.cards.gap / 2
+                   });
+
+                    // Set cards start/end constraints
+                   this.cards.constraints.start = -this.cards.ranges[0].mid;
+                   this.cards.constraints.end = -this.cards.ranges[this.cards.ranges.length - 1].mid;
+               }
             }, `-=${time}`);
         });
-
+        
         tl.play(0);
     }
 
@@ -174,6 +192,12 @@ export default class ThreeExperience extends ThreeControls {
                 ease: 'expo.inOut',
                 duration: time
             }, `-=${time}`);
+
+            tl.to(mat.uniforms.zoom, { 
+                value: 1, 
+                ease: 'expo.inOut',
+                duration: time 
+            }, `-=${time}`);
         });
 
         this.cards.group.children.forEach((card, index) => {            
@@ -186,7 +210,19 @@ export default class ThreeExperience extends ThreeControls {
             tl.to(card.position, { 
                 x: index * (this.cards.width + this.cards.gap),
                 ease: 'expo.inOut',
-                duration: time
+                duration: time,
+                onComplete: () => {
+                    // Collect card range data
+                   this.cards.ranges.push({ 
+                       start: card.position.x - this.cards.width / 2 - this.cards.gap / 2,
+                       mid: card.position.x,
+                       end: card.position.x + this.cards.width / 2 + this.cards.gap / 2
+                   });
+
+                    // Set cards start/end constraints
+                   this.cards.constraints.start = -this.cards.ranges[0].mid;
+                   this.cards.constraints.end = -this.cards.ranges[this.cards.ranges.length - 1].mid;
+               }
             }, `-=${time}`);
 
             tl.play(0);
