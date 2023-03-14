@@ -16,19 +16,23 @@ export default class ThreeObjects extends ThreeRenderer {
     constructor(options) {
         super(options);
 
-        // States
-        this.isMoved = false;
-        this.s = 0;
-    
-        // Cards
+        // UI
         this.slideUI = document.querySelector('#slide-indx');
         this.slideIndx = 0;
-        this.imgScale = 3;
+
+        // Image Settings
+        this.imgSettings = {
+            scale: 2.5,
+            w: 300,
+            h: 420
+        };
+
+        // Cards
         this.cards = {
-            total: 5,
-            width: 1.5 * this.imgScale, // Image ratio is w / h
-            height: 1 * this.imgScale,
-            gap: .10,
+            total: 10,
+            width: 1.0 * this.imgSettings.scale, // Image ratio is w / h
+            height: 1.4 * this.imgSettings.scale,
+            gap: 0.10,
             ranges: [],
             constraints: {},
             group: new THREE.Group(),
@@ -36,7 +40,7 @@ export default class ThreeObjects extends ThreeRenderer {
         };
 
         // Lerp
-        this.position = 100;
+        this.position = 100.0; // How far off the screen group before tween in
         this.lerpAmt = 0.085; // Higher the value = faster
 
         this.createCards();
@@ -55,20 +59,19 @@ export default class ThreeObjects extends ThreeRenderer {
 
         for (let n = 0; n < this.cards.total; n++) {
             // Load texture and create materials
-            texture = textureLoader.load(`images/${n + 1}.jpg`);
+            texture = textureLoader.load(`images/1440-900/${n + 1}-small.jpg`);
             texture.needsUpdate = true;
             material = new THREE.ShaderMaterial({
-                side: THREE.DoubleSide,
                 transparent: true,
                 uniforms: {
-                  time: { value: 0.0 },
-                  texture1: { value: texture },
-                  opacity: { value: 1.0 },
-                  scroll: { value: 0.0 },
-                  uOffset: { value: new THREE.Vector2(0.0, 0.0) },
-                  scale: { value: new THREE.Vector2(1.5, 1.0) },
-                  imageBounds: { value: new THREE.Vector2(700, 467) },
-                  zoom: { value: 1.0 }
+                    uImageBounds: { value: new THREE.Vector2(this.imgSettings.w, this.imgSettings.h) },
+                    uOffset: { value: new THREE.Vector2(0.0, 0.0) },
+                    uOpacity: { value: 1.0 },
+                    uScale: { value: new THREE.Vector2(this.imgSettings.w / this.imgSettings.h, 1.0) },
+                    uScroll: { value: 0.0 },
+                    uTexture: { value: texture },
+                    uTime: { value: 0.0 },
+                    uZoom: { value: 1.0 }
                 },
                 vertexShader: vertexShader,
                 fragmentShader: fragmentShader
@@ -84,7 +87,7 @@ export default class ThreeObjects extends ThreeRenderer {
             // Place card at nth position using card width plus gap
             card.position.x = n * (this.cards.width + this.cards.gap);
 
-            // Unique data-set
+            // Unique data-set for content fetching
             card.uid = `uid-card-${n+1}`;
 
             // Collect card range data
@@ -109,9 +112,9 @@ export default class ThreeObjects extends ThreeRenderer {
     updateCards() {
         // Update material uniforms
         this.cards.materials.forEach((mat, index) => {
-            mat.uniforms.time.value = this.time.elapsed * 2;
-            mat.uniforms.scroll.value = this.s;
-            mat.uniforms.uOffset.value.set(this.s * 0.15, this.s * 0.25);
+            mat.uniforms.uTime.value = this.time.elapsed * 2.0;
+            mat.uniforms.uScroll.value = this.speed.value * 0.45;
+            mat.uniforms.uOffset.value.set(this.speed.value * 0.15, this.speed.value * 0.25);
         });
 
         // Set cards +/- constraints
@@ -130,8 +133,7 @@ export default class ThreeObjects extends ThreeRenderer {
         this.slideUI.innerHTML = `${this.slideIndx} of ${this.cards.total}`;
     }
 
-    updateObjects(speed) {
-        this.s = speed;
+    updateObjects() {
         this.updateCards();
     }
 }

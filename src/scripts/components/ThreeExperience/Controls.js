@@ -3,7 +3,6 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 // Components(s)
 import ThreeObjects from './Objects';
-import ThreeDataGUI from './DataGUI';
 
 // Class - ThreeControls - https://threejs.org/docs/?q=OrbitControls#examples/en/controls/OrbitControls
 export default class ThreeControls extends ThreeObjects {
@@ -11,15 +10,7 @@ export default class ThreeControls extends ThreeObjects {
         super(options);
         this.options = options;
         this.controls = null;
-
         this.createOrbit();
-        this.setDataGUI();
-    }
-
-    setDataGUI() {
-        if (this.options.showGUI) {
-            this.gui = new ThreeDataGUI(this);
-        }
     }
 
     updateControls() {

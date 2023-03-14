@@ -5,17 +5,11 @@ import ThreeControls from './Controls';
 export default class ThreeExperience extends ThreeControls {
     constructor(options, args) {
         super(options);
-        this.options = options;
         this.playing = false;
         this.rafID = null;
 
-         // Speed
-         this.speed = {
-            value: this.wheel.deltaY || 0,
-            scale: .0004,
-            friction: .9,
-        };
-
+        // States
+        this.isMoved = false;
         this.resize();
         this.play();
     }
@@ -40,32 +34,9 @@ export default class ThreeExperience extends ThreeControls {
         }
     }
 
-    setSpeed() {
-        this.speed.value += this.wheel.evt.deltaY * this.speed.scale;
-    }
-
-    setCursor() {
-        this.cursor.x = this.mouse.evt.clientX / this.width - 0.5;
-        this.cursor.y = this.mouse.evt.clientY / this.height - 0.5;
-
-        // For raycasting
-        this.mouse.pointer.x = this.mouse.evt.clientX / this.width * 2 - 1
-        this.mouse.pointer.y = -(this.mouse.evt.clientY / this.height) * 2 + 1
-    }
-
-    setScroll() {
-        this.wheel.isActive = true;
-        this.scroll -= this.wheel.evt.deltaY * 0.0085;
-        
-        setTimeout(() => {
-            this.wheel.isActive = false;
-        }, 150);
-    }
-
     update() {
-        this.speed.value *= this.speed.friction;
         this.updateBase();
-        this.updateObjects(this.speed.value);
+        this.updateObjects();
         this.updateControls();
         this.updateRenderer();
         this.rafID = requestAnimationFrame(this.update.bind(this));
@@ -78,7 +49,7 @@ export default class ThreeExperience extends ThreeControls {
         this.destroyScene();
     }
 
-    // Event Handlers
+    // REFACTOR AND CLEAN UP
     handleObjectsOnClick() {
         const tl = gsap.timeline({ repeat: 0 });
         const dy = (this.isMoved) ? 0 : 10;
@@ -92,7 +63,7 @@ export default class ThreeExperience extends ThreeControls {
                 ease: 'expo.inOut',
             }, `-=${time}`);
 
-            tl.to(card.material.uniforms.opacity, { 
+            tl.to(card.material.uniforms.uOpacity, { 
                 value: da, 
                 duration: .25 
             }, `-=${time}`);
@@ -121,7 +92,7 @@ export default class ThreeExperience extends ThreeControls {
                 ease: 'expo.inOut',
             }, `-=${time}`);
 
-            tl.to(clickedObject.material.uniforms.opacity, { 
+            tl.to(clickedObject.material.uniforms.uOpacity, { 
                 value: da, 
                 duration: .25 
             }, `-=${time}`);
@@ -130,22 +101,27 @@ export default class ThreeExperience extends ThreeControls {
         }
     }
 
-    testClick() {
+    testMouseIn() {
         const tl = gsap.timeline({ repeat: 0 });
-        const time = 0.55;
+        const time = 0.75;
         const scaleFactor = 0.5;
         
         this.cards.materials.forEach((mat, index) => {    
-            // (imageBounds.x (w) * scaleFactor) / imageBounds.y (h) 
-            let scaledRatio =  mat.uniforms.imageBounds.value.x * scaleFactor / mat.uniforms.imageBounds.value.y;
+            let scaledRatio =  mat.uniforms.uImageBounds.value.x * scaleFactor / mat.uniforms.uImageBounds.value.y;
 
-            tl.to(mat.uniforms.scale.value, { 
+            tl.to(mat.uniforms.uScale.value, { 
                 x: scaledRatio, 
                 ease: 'expo.inOut',
                 duration: time 
             }, `-=${time}`);
-        });
 
+            tl.to(mat.uniforms.uZoom, { 
+                value: scaledRatio * 2.25, 
+                ease: 'expo.inOut',
+                duration: time 
+            }, `-=${time}`);
+        });
+        
         this.cards.group.children.forEach((card, index) => {
             tl.to(card.scale, { 
                 x: scaleFactor,
@@ -159,20 +135,26 @@ export default class ThreeExperience extends ThreeControls {
                 duration: time
             }, `-=${time}`);
         });
-
+        
         tl.play(0);
     }
 
-    testClick2() {
+    testMouseOut() {
         const tl = gsap.timeline({ repeat: 0 });
-        const time = 0.55;
+        const time = 0.75;
 
         this.cards.materials.forEach((mat, index) => {       
-            let scaledRatio =  mat.uniforms.imageBounds.value.x / mat.uniforms.imageBounds.value.y;     
-            tl.to(mat.uniforms.scale.value, { 
+            let scaledRatio =  mat.uniforms.uImageBounds.value.x / mat.uniforms.uImageBounds.value.y;     
+            tl.to(mat.uniforms.uScale.value, { 
                 x: scaledRatio,
                 ease: 'expo.inOut',
                 duration: time
+            }, `-=${time}`);
+
+            tl.to(mat.uniforms.uZoom, { 
+                value: 1, 
+                ease: 'expo.inOut',
+                duration: time 
             }, `-=${time}`);
         });
 
